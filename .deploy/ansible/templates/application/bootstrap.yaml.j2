@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: {{ application.name }}
+  cloud:
+    loadbalancer:
+      cache:
+        enabled: {{ spring.cloud.loadbalancer.cache.enabled | default('false') | lower }}
+    kubernetes:
+      enabled: {{ spring.cloud.kubernetes.enabled | default('false') | lower }}
+      config:
+        enabled: {{ spring.cloud.kubernetes.config.false | default('false') | lower }}
+        name: {{ application.name }}
+        namespace: {{ namespace }}
+      reload:
+        enabled: {{ spring.cloud.kubernetes.reload.enabled | default('false') | lower }}
+        strategy: {{ spring.cloud.kubernetes.reload.strategy | default('refresh') | lower }}
+
+server:
+  port: {{ application.port.tcp.number }}
+
+management:
+  server:
+    port: {{ application.port.actuator.number }}
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState, db
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
