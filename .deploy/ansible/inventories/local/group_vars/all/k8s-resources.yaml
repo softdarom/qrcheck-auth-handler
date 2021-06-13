@@ -1,0 +1,12 @@
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  java_opts:
+    - -XX:MaxRAMPercentage=65.0
+    - -XX:+UseContainerSupport
+    - --illegal-access=deny
+    - --add-opens java.base/java.lang.invoke=ALL-UNNAMED

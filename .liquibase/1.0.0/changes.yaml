@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0
+      author: eekovtun
+      comment: Database Initial
+      changes:
+        - tagDatabase:
+            tag: 1.0.0
+
+  - include:
+      file: grant/01_auth.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: ddl/01_users.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/02_roles.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/03_refresh_tokens.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/04_acceess_tokens.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/05_user_token_info.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/06_users_roles.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: dml/01_roles.sql
+      relativeToChangelogFile: true

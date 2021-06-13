@@ -1,0 +1,8 @@
+namespace: test
+
+deployment:
+  health:
+    progress_deadline_seconds: 600
+    initial_delay_seconds: 120
+    period_seconds: 15
+    failure_threshold: 30

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: auth-handler
+  cloud:
+    kubernetes:
+      enabled: false
+
+server:
+  port: 8888
+
+management:
+  server:
+    port: 7777
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus

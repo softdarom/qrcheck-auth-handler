@@ -1,0 +1,141 @@
+plugins {
+    id "org.springframework.boot" version "2.4.5"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "java-library"
+    id "jacoco"
+    id "org.liquibase.gradle" version "2.0.4"
+}
+
+group = "ru.softdarom.qrcheck.auth.handler"
+
+bootJar {
+    archiveFileName = "auth-handler.jar"
+}
+
+configurations {
+    annotationProcessor {
+        extendsFrom compileOnly
+    }
+
+    testAnnotationProcessor {
+        extendsFrom testCompileOnly
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    set("springCloudVersion", "2020.0.1")
+    set("springSecurityAuthVersion", "2.5.1.RELEASE")
+    set("micrometerVersion", "1.5.4")
+    set("logbookVersion", "2.6.2")
+    set("p6spyVersion", "3.9.0")
+    set("modelMapperVersion", "2.4.4")
+    set("groovyVersion", "3.0.7")
+    set("liquibaseCoreVersion", "3.10.3")
+    set("liquibaseDslVersion", "3.0.1")
+    set("logbackVersion", "1.2.3")
+    set("postgresVersion", "42.2.5")
+    set("snakeyamlVersion", "1.29")
+    set("junitVersion", "5.4.2")
+    set("wiremockVersion", "2.27.2")
+    set("testcontainerVersion", "1.15.2")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    api "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework.boot:spring-boot-starter-data-jpa"
+    api "org.springframework.boot:spring-boot-starter-validation"
+    api "org.springframework.boot:spring-boot-starter-actuator"
+    api "org.springframework.boot:spring-boot-starter-security"
+    api "org.springframework.cloud:spring-cloud-starter-sleuth"
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "org.springframework.cloud:spring-cloud-starter-kubernetes-client-config"
+    api "org.springframework.security.oauth:spring-security-oauth2:${springSecurityAuthVersion}"
+
+    api "io.micrometer:micrometer-registry-prometheus:${micrometerVersion}"
+    api "org.zalando:logbook-spring-boot-starter:${logbookVersion}"
+    api "p6spy:p6spy:${p6spyVersion}"
+    api "org.modelmapper:modelmapper:${modelMapperVersion}"
+    api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+
+    runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
+
+    compileOnly "org.projectlombok:lombok"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+
+    testCompileOnly "org.projectlombok:lombok"
+    testCompileOnly "org.springframework.boot:spring-boot-configuration-processor"
+
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+    liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:${liquibaseDslVersion}"
+    liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+    liquibaseRuntime "org.postgresql:postgresql:${postgresVersion}"
+    liquibaseRuntime "org.yaml:snakeyaml:${snakeyamlVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    testImplementation "com.github.tomakehurst:wiremock:${wiremockVersion}"
+    testImplementation "org.testcontainers:postgresql:${testcontainerVersion}"
+}
+
+jacocoTestReport {
+    reports {
+        xml {
+            enabled true
+            destination file("${buildDir}/jacoco/coverage.xml")
+        }
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+//                minimum = 0.8
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform {
+        includeTags "spring-mock", "spring-integration", "unit"
+    }
+    finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
+}
+
+liquibase {
+    def properties = new Properties()
+    def propertyFile = file(".deploy/ansible/configs/liquibase/liquibase.properties")
+
+    if (propertyFile.exists()) {
+        propertyFile.withInputStream { properties.load(it) }
+    }
+
+    activities {
+        main {
+            changeLogFile "${projectDir}/.liquibase/changelog.yaml"
+            outputFile "${buildDir}/liquibase/sql-migration.sql"
+            url properties.getOrDefault("url", "jdbc:postgresql://localhost:5432/qrcheck")
+            defaultSchemaName properties.getOrDefault("schema", "auth")
+            username properties.getOrDefault("username", "liquibase")
+            password properties.getOrDefault("password", "liquibase")
+            contexts properties.getOrDefault("context", "local")
+        }
+    }
+}
