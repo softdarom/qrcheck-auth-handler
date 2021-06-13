@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
@@ -20,9 +20,8 @@ import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.g
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleAccessTokenResponse;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleTokenInfoResponse;
 
-@SpringMockTest
-@DisplayName("UserHandlerClient Spring Mock Test")
-class GoogleAuthClientTest {
+@DisplayName("UserHandlerClient Spring Integration Test")
+class GoogleAuthClientTest extends AbstractIntegrationTest {
 
     private static final String GET_TOKEN_INFO = "/oauth2/tokens/info";
     private static final String POST_TOKEN_REFRESH = "/oauth2/tokens/refresh";

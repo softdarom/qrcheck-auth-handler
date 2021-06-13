@@ -16,7 +16,7 @@ import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -28,9 +28,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
 
-@SpringMockTest
-@DisplayName("TokenRefreshService Spring Mock Test")
-class TokenRefreshServiceTest {
+@DisplayName("TokenRefreshService Spring Integration Test")
+class TokenRefreshServiceTest extends AbstractIntegrationTest {
 
     @Mock
     private AccessTokenAccessService accessTokenAccessServiceMock;

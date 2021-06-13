@@ -13,7 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.UserAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.util.Optional;
 import java.util.Set;
@@ -25,9 +25,8 @@ import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateLong;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
 
-@SpringMockTest
-@DisplayName("TokenService Spring Mock Test")
-class TokenServiceTest {
+@DisplayName("TokenService Spring Integration Test")
+class TokenServiceTest extends AbstractIntegrationTest {
 
     @Mock
     private RoleAccessService roleAccessServiceMock;

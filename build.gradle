@@ -106,7 +106,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
-//                minimum = 0.8
+                minimum = 0.8
             }
         }
     }
@@ -114,7 +114,7 @@ jacocoTestCoverageVerification {
 
 test {
     useJUnitPlatform {
-        includeTags "spring-mock", "spring-integration", "unit"
+        includeTags "spring-integration", "unit"
     }
     finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
 }

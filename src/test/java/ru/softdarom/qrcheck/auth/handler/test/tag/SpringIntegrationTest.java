@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.softdarom.qrcheck.auth.handler.AuthHandlerApplication;
+import ru.softdarom.qrcheck.auth.handler.test.config.WireMockConfig;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,7 +18,10 @@ import java.lang.annotation.Target;
 @Tag("spring-integration")
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = AuthHandlerApplication.class
+        classes = {
+                AuthHandlerApplication.class,
+                WireMockConfig.class
+        }
 )
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("integration-test")

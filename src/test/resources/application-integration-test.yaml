@@ -45,9 +45,11 @@ spring:
 outbound:
   feign:
     google-auth:
-      host: "http://localhost:8000/oauth2"
+      host: "http://localhost:${outbound.feign.google-auth.port}/oauth2"
+      port: 8100
     user-handler:
-      host: "http://localhost:8001/inner"
+      host: "http://localhost:${outbound.feign.user-handler.port}/inner"
+      port: 8200
 
 logbook:
   strategy: body-only-if-status-at-least

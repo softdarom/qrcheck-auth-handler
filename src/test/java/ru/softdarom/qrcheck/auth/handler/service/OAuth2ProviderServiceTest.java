@@ -14,7 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.client.GoogleAuthClient;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.util.Map;
 import java.util.UUID;
@@ -25,9 +25,8 @@ import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleAccessTokenResponse;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleTokenInfoResponse;
 
-@SpringMockTest
-@DisplayName("OAuth2ProviderService Spring Mock Test")
-class OAuth2ProviderServiceTest {
+@DisplayName("OAuth2ProviderService Spring Integration Test")
+class OAuth2ProviderServiceTest extends AbstractIntegrationTest {
 
     @Mock
     private GoogleAuthClient googleAuthClientMock;

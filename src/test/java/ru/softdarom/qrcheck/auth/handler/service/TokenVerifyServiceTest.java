@@ -15,7 +15,7 @@ import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.TokenValidType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -28,9 +28,8 @@ import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleTokenInfoResponse;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userDto;
 
-@SpringMockTest
-@DisplayName("TokenVerifyService Spring Mock Test")
-class TokenVerifyServiceTest {
+@DisplayName("TokenVerifyService Spring Integration Test")
+class TokenVerifyServiceTest extends AbstractIntegrationTest {
 
     @Mock
     private AccessTokenAccessService accessTokenAccessServiceMock;

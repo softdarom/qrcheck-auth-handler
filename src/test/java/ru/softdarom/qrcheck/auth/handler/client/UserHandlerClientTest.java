@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import ru.softdarom.qrcheck.auth.handler.test.tag.SpringMockTest;
+import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
@@ -19,9 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateString;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.providerUserDto;
 
-@SpringMockTest
-@DisplayName("UserHandlerClient Spring Mock Test")
-class UserHandlerClientTest {
+@DisplayName("UserHandlerClient Spring Integration Test")
+class UserHandlerClientTest extends AbstractIntegrationTest {
 
     private static final String POST_SAVE_USER = "/inner/users";
 
