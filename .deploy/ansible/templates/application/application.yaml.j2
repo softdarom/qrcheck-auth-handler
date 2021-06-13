@@ -26,8 +26,10 @@ spring:
       idle-timeout: {{ spring.datasource.hikari.pool_name | default(200000) }}
       minimum-idle: {{ spring.datasource.hikari.idle_timeout | default(2) }}
       schema: auth
-  liquibase:
-    enabled: false
+    liquibase:
+      change-log: file:.liquibase/changelog.yaml
+      contexts: test
+      enabled: true
   groovy:
     template:
       check-template-location: false
