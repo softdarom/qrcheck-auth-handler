@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.refreshTokenDto;
 
 @Sql(scripts = "classpath:sql/access/RefreshTokenAccessService/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:sql/access/RefreshTokenAccessService/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
@@ -26,6 +28,9 @@ class RefreshTokenAccessServiceTest extends AbstractIntegrationTest {
     @Autowired
     private RefreshTokenAccessService refreshTokenAccessService;
 
+    @Autowired
+    private UserAccessService userAccessService;
+
     //  -----------------------   successful tests   -------------------------
 
     @ParameterizedTest
@@ -36,6 +41,22 @@ class RefreshTokenAccessServiceTest extends AbstractIntegrationTest {
         assertAll(() -> {
             assertNotNull(actual);
             assertEquals(DEFAULT_SIZE_REFRESH_TOKEN_BY_USER_AND_PROVIDER, actual.size());
+        });
+    }
+
+    @ParameterizedTest
+    @EnumSource(ProviderType.class)
+    @DisplayName("save(): returns a saved dto")
+    void successfulSave(ProviderType provider) {
+        var user = userAccessService.findByExternalUserId(DEFAULT_USER_ID);
+        var refreshToken = refreshTokenDto(provider);
+        refreshToken.setUser(user.orElseThrow());
+        var actual = assertDoesNotThrow(() -> refreshTokenAccessService.save(refreshToken));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertNotNull(actual.getId());
+            assertEquals(provider, actual.getProvider());
+            assertEquals(ActiveType.ENABLED, actual.getActive());
         });
     }
 
@@ -52,5 +73,11 @@ class RefreshTokenAccessServiceTest extends AbstractIntegrationTest {
     @DisplayName("find(): throws IllegalArgumentException when a provider is null")
     void failureFindNullProvider() {
         assertThrows(IllegalArgumentException.class, () -> refreshTokenAccessService.find(0L, null));
+    }
+
+    @Test
+    @DisplayName("save(): throws IllegalArgumentException when a dto is null")
+    void failureSaveNullDto() {
+        assertThrows(IllegalArgumentException.class, () -> refreshTokenAccessService.save(null));
     }
 }

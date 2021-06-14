@@ -48,7 +48,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
         var refreshToken = getRefreshToken(foundAccessToken);
         var newOAuth2AccessToken = oAuth2ProviderService.refreshToken(refreshToken.getToken(), foundAccessToken.getProvider());
         var newAccessToken = new AccessTokenDtoBuilder.ByOAuth2AccessToken(newOAuth2AccessToken, refreshToken).build();
-        disableOldAccessTokens(refreshToken, refreshToken.getProvider());
+        disableOldAccessTokens(refreshToken);
         var savedAccessToken = accessTokenAccessService.save(newAccessToken);
         return new RefreshTokenResponse(savedAccessToken.getToken());
     }
@@ -85,5 +85,10 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
                 .stream()
                 .filter(it -> Objects.equals(it.getProvider(), provider))
                 .forEach(it -> it.setActive(ActiveType.DISABLED));
+    }
+
+    private void disableOldAccessTokens(RefreshTokenDto refreshToken) {
+        disableOldAccessTokens(refreshToken, refreshToken.getProvider());
+        refreshTokenAccessService.save(refreshToken);
     }
 }

@@ -78,6 +78,7 @@ class TokenRefreshServiceTest extends AbstractIntegrationTest {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock).find(any(), any());
             verify(oAuth2ProviderServiceMock).refreshToken(any(), any());
+            verify(refreshTokenAccessServiceMock).save(any());
             verify(accessTokenAccessServiceMock).save(any());
         });
     }

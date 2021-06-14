@@ -40,4 +40,12 @@ public class RefreshTokenAccessServiceImpl implements RefreshTokenAccessService 
                 .collect(Collectors.toSet());
         return modelMapper.convertToDestinations(refreshTokens);
     }
+
+    @Override
+    @Transactional
+    public RefreshTokenDto save(RefreshTokenDto dto) {
+        Assert.notNull(dto, "The 'dto' must not be null!");
+        var entity = modelMapper.convertToSource(dto);
+        return modelMapper.convertToDestination(refreshTokenRepository.save(entity));
+    }
 }

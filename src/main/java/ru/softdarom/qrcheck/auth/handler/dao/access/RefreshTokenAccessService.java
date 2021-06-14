@@ -9,4 +9,5 @@ public interface RefreshTokenAccessService {
 
     Set<RefreshTokenDto> find(Long userId, ProviderType provider);
 
+    RefreshTokenDto save(RefreshTokenDto dto);
 }
