@@ -35,7 +35,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(apiKeyAuthorizationFilter)
                 .authenticationProvider(keyApiAuthenticationProvider)
                 .authorizeRequests(request ->
-                        request.anyRequest().authenticated()
+                        request
+                                .antMatchers("/tokens/refresh").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
