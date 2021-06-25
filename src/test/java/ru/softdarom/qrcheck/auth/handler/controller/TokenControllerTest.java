@@ -155,19 +155,6 @@ class TokenControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @DisplayName("refresh(): returns 401 when not authentication")
-    void failureRefreshUnauthorized() {
-        var uri = URI_TOKENS_REFRESH + "?accessToken=" + UUID.randomUUID();
-        when(tokenServiceMock.refresh(any())).thenThrow(RuntimeException.class);
-        var actual =
-                assertDoesNotThrow(() -> post(buildNotAuthHeader(), uri));
-        assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
-            verify(tokenServiceMock, never()).refresh(any());
-        });
-    }
-
-    @Test
     @DisplayName("refresh(): returns 404 when access token not found")
     void failureRefreshNotFound() {
         var uri = URI_TOKENS_REFRESH + "?accessToken=" + UUID.randomUUID();
