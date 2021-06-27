@@ -55,3 +55,6 @@ logbook:
     style: http
   exclude:
     - /actuator/**
+    - /v3/api-docs/**
+    - /swagger-ui/**
+    - /swagger-api/**
