@@ -1,12 +1,11 @@
 package ru.softdarom.qrcheck.auth.handler.rest.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,8 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.response.TokenUserInfoRespons
 import ru.softdarom.qrcheck.auth.handler.service.TokenService;
 
 import javax.validation.Valid;
+
+import static ru.softdarom.qrcheck.auth.handler.config.OpenApiConfig.API_KEY_SECURITY_NAME;
 
 @Tag(name = "Tokens", description = "Контроллер взаимодействия с access token'ами")
 @RestController
@@ -64,7 +65,7 @@ public class TokenController {
                     )
             }
     )
-    @Parameter(in = ParameterIn.HEADER, required = true, name = "X-ApiKey-Authorization", description = "ApiKey для доступа к API")
+    @SecurityRequirement(name = API_KEY_SECURITY_NAME)
     @PostMapping("/info")
     public ResponseEntity<TokenUserInfoResponse> save(@Valid @RequestBody TokenUserInfoRequest request) {
         return ResponseEntity.ok(tokenService.saveOAuth2TokenInfo(request));
@@ -110,7 +111,7 @@ public class TokenController {
                     )
             }
     )
-    @Parameter(in = ParameterIn.HEADER, required = true, name = "X-ApiKey-Authorization", description = "ApiKey для доступа к API")
+    @SecurityRequirement(name = API_KEY_SECURITY_NAME)
     @GetMapping("/verify")
     public ResponseEntity<AbstractOAuth2TokenInfoResponse> verify(@RequestParam String accessToken) {
         return ResponseEntity.ok(tokenService.verify(accessToken));
