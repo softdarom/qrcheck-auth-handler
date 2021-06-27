@@ -67,6 +67,7 @@ dependencies {
     api "p6spy:p6spy:${p6spyVersion}"
     api "org.modelmapper:modelmapper:${modelMapperVersion}"
     api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+    api "org.springdoc:springdoc-openapi-ui:1.5.9"
 
     runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresVersion}"

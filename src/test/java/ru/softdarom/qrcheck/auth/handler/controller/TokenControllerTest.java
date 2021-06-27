@@ -122,22 +122,22 @@ class TokenControllerTest extends AbstractControllerTest {
     //  -----------------------   failure tests   -------------------------
 
     @Test
-    @DisplayName("save(): returns 401 when not authentication")
+    @DisplayName("save(): returns 403 when not authentication")
     void failureSaveUnauthorized() {
         var actual = assertDoesNotThrow(() -> post(tokenUserInfoRequest(), buildNotAuthHeader(), URI_TOKENS_SAVE));
         assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
+            assertCall().accept(actual, HttpStatus.FORBIDDEN);
             verify(tokenServiceMock, never()).saveOAuth2TokenInfo(any());
         });
     }
 
     @Test
-    @DisplayName("verify(): returns 401 when not authentication")
+    @DisplayName("verify(): returns 403 when not authentication")
     void failureVerifyUnauthorized() {
         var uri = URI_TOKENS_VERIFY + "?accessToken=" + UUID.randomUUID();
         var actual = assertDoesNotThrow(() -> get(BaseResponse.class, buildNotAuthHeader(), uri));
         assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
+            assertCall().accept(actual, HttpStatus.FORBIDDEN);
             verify(tokenServiceMock, never()).verify(any());
         });
     }

@@ -40,6 +40,21 @@ spring:
           - fc28c7e5-fb14-4335-9aa1-e0921cfdd4b9 #google-auth
         outgoing: d88d2dab-4002-4d7c-b259-d9682df4f22b
 
+springdoc:
+  api-docs:
+    path: "/swagger-api"
+    enabled: true
+  swagger-ui:
+    path: "/"
+  info:
+    title: Auth Handler RESTful API
+    description: Сервис управления аутентификцией
+    version: V1
+    licence-url: https://qrchk.ru/licence
+    owner-name: QRCheck
+    owner-url: https://qrchk.ru
+    owner-email: it.support@softdarom.ru
+
 outbound:
   feign:
     google-auth:
@@ -55,3 +70,6 @@ logbook:
     name: AUTH-HANDLER-REST
   exclude:
     - /actuator/**
+    - /v3/api-docs/**
+    - /swagger-ui/**
+    - /swagger-api/**

@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
 import ru.softdarom.qrcheck.auth.handler.config.property.LogbookProperties;
+import ru.softdarom.qrcheck.auth.handler.config.property.SwaggerProperties;
 
 @Generated
 @SpringBootApplication
@@ -16,7 +17,8 @@ import ru.softdarom.qrcheck.auth.handler.config.property.LogbookProperties;
 @EnableConfigurationProperties(
         {
                 LogbookProperties.class,
-                ApiKeyProperties.class
+                ApiKeyProperties.class,
+                SwaggerProperties.class
         }
 )
 public class AuthHandlerApplication {

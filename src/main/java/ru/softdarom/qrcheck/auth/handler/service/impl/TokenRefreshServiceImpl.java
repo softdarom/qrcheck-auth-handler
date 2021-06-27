@@ -44,7 +44,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
         LOGGER.info("Refreshing an access token: {}", accessToken);
         var foundAccessToken =
                 accessTokenAccessService.findByToken(accessToken)
-                        .orElseThrow(() -> new NotFoundException("Access token nof found by " + accessToken));
+                        .orElseThrow(() -> new NotFoundException("Access token not found by " + accessToken));
         var refreshToken = getRefreshToken(foundAccessToken);
         var newOAuth2AccessToken = oAuth2ProviderService.refreshToken(refreshToken.getToken(), foundAccessToken.getProvider());
         var newAccessToken = new AccessTokenDtoBuilder.ByOAuth2AccessToken(newOAuth2AccessToken, refreshToken).build();

@@ -2,24 +2,26 @@ package ru.softdarom.qrcheck.auth.handler.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ApiKeyAuthorizationConfig.ApiKeyAuthorizationFilter apiKeyAuthorizationFilter;
     private final ApiKeyAuthorizationConfig.KeyApiAuthenticationProvider keyApiAuthenticationProvider;
+    private final AuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
     @Autowired
     WebSecurityConfig(ApiKeyAuthorizationConfig.ApiKeyAuthorizationFilter apiKeyAuthorizationFilter,
-                      ApiKeyAuthorizationConfig.KeyApiAuthenticationProvider keyApiAuthenticationProvider) {
+                      ApiKeyAuthorizationConfig.KeyApiAuthenticationProvider keyApiAuthenticationProvider,
+                      AuthenticationEntryPoint defaultAuthenticationEntryPoint) {
         this.apiKeyAuthorizationFilter = apiKeyAuthorizationFilter;
         this.keyApiAuthenticationProvider = keyApiAuthenticationProvider;
+        this.defaultAuthenticationEntryPoint = defaultAuthenticationEntryPoint;
     }
 
     @Override
@@ -42,13 +44,19 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .exceptionHandling(handlerConfigurer -> handlerConfigurer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+                    .exceptionHandling(handlerConfigurer -> handlerConfigurer.authenticationEntryPoint(defaultAuthenticationEntryPoint));
         // @formatter:on
     }
 
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
+                .antMatchers(
+                        "/",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-api/**"
+                )
                 .antMatchers(
                         "/actuator/health/**",
                         "/actuator/prometheus/**"
