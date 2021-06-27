@@ -38,6 +38,21 @@ spring:
         incoming: ${API_KEY_INCOMING}
         outgoing: ${API_KEY_OUTGOING}
 
+springdoc:
+  api-docs:
+    path: "/swagger-api"
+    enabled: {{ springdoc.api_docs.enabled | default('false') | lower }}
+  swagger-ui:
+    path: "/"
+  info:
+    title: Auth Handler RESTful API
+    description: Сервис управления аутентификцией
+    version: V1
+    licence-url: https://qrchk.ru/licence
+    owner-name: QRCheck
+    owner-url: https://qrchk.ru
+    owner-email: it.support@softdarom.ru
+
 outbound:
   feign:
     google-auth:
