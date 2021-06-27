@@ -75,7 +75,7 @@ public class TokenController {
             value = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Auth-информация сохранена",
+                            description = "Access token прошел проверку",
                             content = {
                                     @Content(mediaType = "application/json", schema = @Schema(implementation = AbstractOAuth2TokenInfoResponse.class))
                             }
@@ -120,7 +120,8 @@ public class TokenController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Auth-информация сохранена",
+                            responseCode = "200",
+                            description = "Access token обновлен",
                             content = {
                                     @Content(mediaType = "application/json", schema = @Schema(implementation = AbstractOAuth2TokenInfoResponse.class))
                             }

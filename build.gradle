@@ -37,6 +37,7 @@ ext {
     set("groovyVersion", "3.0.7")
     set("liquibaseCoreVersion", "3.10.3")
     set("liquibaseDslVersion", "3.0.1")
+    set("swaggerVersion", "1.5.9")
     set("logbackVersion", "1.2.3")
     set("postgresVersion", "42.2.5")
     set("snakeyamlVersion", "1.29")
@@ -67,7 +68,7 @@ dependencies {
     api "p6spy:p6spy:${p6spyVersion}"
     api "org.modelmapper:modelmapper:${modelMapperVersion}"
     api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
-    api "org.springdoc:springdoc-openapi-ui:1.5.9"
+    api "org.springdoc:springdoc-openapi-ui:${swaggerVersion}"
 
     runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
