@@ -39,6 +39,7 @@ ext {
     set("liquibaseDslVersion", "3.0.1")
     set("swaggerVersion", "1.5.9")
     set("logbackVersion", "1.2.3")
+    set("logstashVersion", "5.2")
     set("postgresVersion", "42.2.5")
     set("snakeyamlVersion", "1.29")
     set("junitVersion", "5.4.2")
@@ -69,6 +70,7 @@ dependencies {
     api "org.modelmapper:modelmapper:${modelMapperVersion}"
     api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
     api "org.springdoc:springdoc-openapi-ui:${swaggerVersion}"
+    api "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
 
     runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
