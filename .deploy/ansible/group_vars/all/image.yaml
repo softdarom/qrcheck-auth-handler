@@ -1,0 +1,8 @@
+image:
+  application:
+    project: qrcheck
+    image: auth-handler
+  filebeat:
+    project: elastic
+    image: filebeat
+    version: 7.13.2

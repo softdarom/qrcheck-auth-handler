@@ -1,0 +1,17 @@
+filebeat.inputs:
+  - type: log
+    encoding: utf-8
+    enabled: true
+    paths:
+      - {{ filebeat.path.input }}/*.log
+    json:
+      add_error_key: true
+      keys_under_root: true
+      overwrite_keys: true
+    scan_frequency: 10s
+    close_inactive: 5m
+    close_timeout: 0
+
+output.logstash:
+  hosts: ["{{ filebeat.logstash.host }}"]
+  index: "{{ filebeat.index }}"

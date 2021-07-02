@@ -20,3 +20,5 @@ stop:
 	@kubectl delete cm -l app=${APPLICATION_NAME}
 	@kubectl delete secret -l app=${APPLICATION_NAME}
 	@eval $$(minikube docker-env) && docker rmi ${PROJECT_NAME}/${APPLICATION_NAME}:${DOCKER_VERSION} -f
+
+restart: stop start

@@ -5,7 +5,7 @@ metadata:
   name: {{ application.name }}
   labels:
     app: {{ application.name }}
-    version: {{ lookup('env', 'DOCKER_VERSION') | default('unknown') }}
+    version: {{ lookup("env", "DOCKER_VERSION") | default("unknown") }}
 spec:
   minReadySeconds: {{ deployment.health.initial_delay_seconds | default(30) }}
   progressDeadlineSeconds: {{ deployment.health.progress_deadline_seconds | default(100) }}
@@ -24,16 +24,16 @@ spec:
       name: {{ application.name }}
       labels:
         app: {{ application.name }}
-        version: {{ lookup('env', 'DOCKER_VERSION') | default('unknown') }}
+        version: {{ lookup("env", "DOCKER_VERSION") | default("unknown") }}
     spec:
       containers:
         - name: {{ application.name }}
-          image: "{{ docker.project }}/{{ docker.image }}:{{ lookup('env', 'DOCKER_VERSION') }}"
-          imagePullPolicy: {{ deployment.image_pull_policy | default('IfNotPresent') }}
+          image: {{ image.application.project }}/{{ image.application.image }}:{{ lookup("env", "DOCKER_VERSION") }}
+          imagePullPolicy: {{ deployment.image_pull_policy | default("IfNotPresent") }}
 
           env:
             - name: JAVA_OPTS
-              value: "{{ resources.java_opts | join(' ') }}"
+              value: "{{ resources.java_opts | join(" ") }}"
 
           envFrom:
             - secretRef:
@@ -78,7 +78,31 @@ spec:
             timeoutSeconds: {{ deployment.health.timeout_seconds | default(1) }}
             failureThreshold: {{ deployment.health.failure_threshold | default(5) }}
 
-      restartPolicy: {{ deployment.restart_policy | default('Always') }}
+        - name: {{ filebeat.name }}
+          image: {{ image.filebeat.project }}/{{ image.filebeat.image }}:{{ image.filebeat.version }}
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: {{ filebeat.port.tcp.name }}
+              containerPort: {{ filebeat.port.tcp.number }}
+
+          volumeMounts:
+            - name: {{ application.name }}-logs
+              mountPath:  {{ filebeat.path.input }}
+              readOnly: true
+            - name: {{ filebeat.name }}-config
+              mountPath: {{ filebeat.path.config }}/filebeat.yml
+              subPath: filebeat.yaml
+
+          resources:
+            requests:
+              cpu: {{ filebeat.resources.requests.cpu }}
+              memory: {{ filebeat.resources.requests.memory }}
+            limits:
+              cpu: {{ filebeat.resources.limits.cpu }}
+              memory: {{ filebeat.resources.limits.memory }}
+
+      restartPolicy: {{ deployment.restart_policy | default("Always") }}
 
       volumes:
         - name: {{ application.name }}-config
@@ -86,3 +110,6 @@ spec:
             name: {{ application.name }}
         - name: {{ application.name }}-logs
           emptyDir: {}
+        - name: {{ filebeat.name }}-config
+          configMap:
+            name: {{ application.name }}-{{ filebeat.name }}

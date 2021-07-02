@@ -60,6 +60,9 @@ outbound:
     user-handler:
       host: http://user-handler:8000/inner
 
+logging:
+  config: config/logback.groovy
+
 logbook:
   strategy: {{ logbook.strategy }}
   format:

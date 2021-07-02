@@ -13,3 +13,15 @@ data:
     {{ lookup('template', '{{ playbook_dir }}/templates/application/application.yaml.j2') | indent }}
   logback.groovy: |
     {{ lookup('template', '{{ playbook_dir }}/templates/application/logback.groovy.j2') | indent }}
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: {{ namespace }}
+  name: {{ application.name }}-{{ filebeat.name }}
+  labels:
+    app: {{ application.name }}
+data:
+  filebeat.yaml: |
+    {{ lookup('template', '{{ playbook_dir }}/templates/filebeat/filebeat.yaml.j2') | indent }}
