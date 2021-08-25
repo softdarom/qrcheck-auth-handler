@@ -1,0 +1,2 @@
+![TeamCity build status](https://teamcity.softdarom.ru/app/rest/builds/buildType:id:QRCheck_Backend_AuthHandler_Build/statusIcon.svg)
+[![codecov](https://codecov.io/gh/softdarom/qrcheck-auth-handler/branch/develop/graph/badge.svg?token=XQ465IQDU9)](https://codecov.io/gh/softdarom/qrcheck-auth-handler)
