@@ -8,10 +8,6 @@ databaseChangeLog:
             tag: 1.0.0
 
   - include:
-      file: grant/01_auth.sql
-      relativeToChangelogFile: true
-
-  - include:
       file: ddl/01_users.sql
       relativeToChangelogFile: true
   - include:
