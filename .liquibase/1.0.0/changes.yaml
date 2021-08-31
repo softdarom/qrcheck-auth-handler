@@ -29,3 +29,13 @@ databaseChangeLog:
   - include:
       file: dml/01_roles.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: grant/01_auth_handler.sql
+      relativeToChangelogFile: true
+  - include:
+      file: grant/02_editor.sql
+      relativeToChangelogFile: true
+  - include:
+      file: grant/03_viewer.sql
+      relativeToChangelogFile: true
