@@ -1,7 +1,10 @@
 package ru.softdarom.qrcheck.auth.handler.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
+import lombok.NoArgsConstructor;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.BaseResponse;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
@@ -22,6 +25,9 @@ public class ProviderUserDto extends BaseResponse {
 
     @JsonProperty("email")
     private String email;
+
+    @JsonProperty("picture")
+    private String picture;
 
     @Override
     public String toString() {

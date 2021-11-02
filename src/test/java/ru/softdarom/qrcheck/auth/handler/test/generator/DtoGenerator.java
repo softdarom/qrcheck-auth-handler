@@ -48,6 +48,7 @@ public final class DtoGenerator {
         dto.setFirstName(generateString());
         dto.setSecondName(generateString());
         dto.setEmail(generateString());
+        dto.setPicture(generateString());
         return dto;
     }
 
