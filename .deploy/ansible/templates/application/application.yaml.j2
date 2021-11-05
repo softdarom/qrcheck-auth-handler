@@ -47,7 +47,7 @@ springdoc:
   info:
     title: Auth Handler RESTful API
     description: Сервис управления аутентификцией
-    version: V1
+    version: {{ lookup('env', 'DOCKER_VERSION') | default('unknown') }}
     licence-url: https://qrchk.ru/licence
     owner-name: QRCheck
     owner-url: https://qrchk.ru
