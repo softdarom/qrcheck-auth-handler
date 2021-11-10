@@ -103,6 +103,9 @@ spec:
               memory: {{ filebeat.resources.limits.memory }}
 
       restartPolicy: {{ deployment.restart_policy | default("Always") }}
+      terminationGracePeriodSeconds: {{ deployment.restart_policy | default(15) }}
+      nodeSelector:
+        custom.node: {{ env }}
 
       volumes:
         - name: {{ application.name }}-config
