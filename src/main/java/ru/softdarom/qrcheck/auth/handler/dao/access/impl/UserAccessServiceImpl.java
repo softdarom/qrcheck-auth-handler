@@ -13,7 +13,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserDto;
 import java.util.Optional;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-ACCESS-SERVICE")
+@Slf4j(topic = "ACCESS-SERVICE")
 public class UserAccessServiceImpl implements UserAccessService {
 
     private final UserRepository userRepository;

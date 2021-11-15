@@ -11,7 +11,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.response.BaseResponse;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
-@Slf4j(topic = "AUTH-HANDLER-EXCEPTION-HANDLER")
+@Slf4j(topic = "EXCEPTION-HANDLER")
 public class AuthHandlerExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)

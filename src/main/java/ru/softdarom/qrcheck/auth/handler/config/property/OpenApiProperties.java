@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Validated
 @ConfigurationProperties("springdoc.info")
-public class SwaggerProperties {
+public class OpenApiProperties {
 
     @NotEmpty
     private String title;

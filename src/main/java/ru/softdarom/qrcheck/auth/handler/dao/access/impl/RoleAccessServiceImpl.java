@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-ACCESS-SERVICE")
+@Slf4j(topic = "ACCESS-SERVICE")
 public class RoleAccessServiceImpl implements RoleAccessService {
 
     private static final Collection<String> DEFAULT_ROLES = Set.of("ROLE_USER");

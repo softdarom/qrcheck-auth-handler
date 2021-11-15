@@ -7,8 +7,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.security.oauth2.config.property.ApiKeyProperties;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -69,13 +69,14 @@ abstract class AbstractControllerTest extends AbstractIntegrationTest {
 
     protected HttpHeaders buildApiKeyHeader() {
         var headers = new HttpHeaders();
-        headers.set(apiKeyProperties.getName(), apiKeyProperties.getToken().getIncoming().stream().findAny().orElseThrow());
+        headers.set(apiKeyProperties.getHeaderName(), apiKeyProperties.getToken().getIncoming().stream().findAny().orElseThrow());
         return headers;
     }
 
     protected HttpHeaders buildNotAuthHeader() {
-        var headers = new HttpHeaders();
-        headers.set(apiKeyProperties.getName(), UUID.randomUUID().toString());
-        return headers;
+//        var headers = new HttpHeaders();
+//        headers.set(apiKeyProperties.getHeaderName(), UUID.randomUUID().toString());
+//        return headers;
+        return new HttpHeaders();
     }
 }

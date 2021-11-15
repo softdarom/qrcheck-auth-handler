@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-ACCESS-SERVICE")
+@Slf4j(topic = "ACCESS-SERVICE")
 public class RefreshTokenAccessServiceImpl implements RefreshTokenAccessService {
 
     private final RefreshTokenRepository refreshTokenRepository;

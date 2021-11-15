@@ -6,7 +6,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserTokenInfoDto;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
-@Slf4j(topic = "AUTH-HANDLER-BUILDER")
+@Slf4j(topic = "BUILDER")
 public final class UserTokenInfoDtoBuilder {
 
     private final ProviderTokenDto providerToken;
@@ -17,7 +17,7 @@ public final class UserTokenInfoDtoBuilder {
     }
 
     public UserTokenInfoDto build() {
-        LOGGER.debug("Building a UserTokenInfoDto by {}", JsonHelper.asJson(providerToken));
+        LOGGER.debug("Создание объекта UserTokenInfoDto из {}", JsonHelper.asJson(providerToken));
         return UserTokenInfoDto.builder()
                 .sub(providerToken.getSub())
                 .provider(providerToken.getProvider())

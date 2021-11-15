@@ -18,7 +18,7 @@ class LogbookConfig {
 
     @Bean
     HttpLogWriter writer(LogbookProperties properties) {
-        return new GeomagneticHttpLogWriter(properties);
+        return new QRCheckHttpLogWriter(properties);
     }
 
     @Bean
@@ -26,11 +26,11 @@ class LogbookConfig {
         return new SleuthCorrelationId(tracer);
     }
 
-    public static class GeomagneticHttpLogWriter implements HttpLogWriter {
+    public static class QRCheckHttpLogWriter implements HttpLogWriter {
 
         private final Logger logger;
 
-        public GeomagneticHttpLogWriter(LogbookProperties properties) {
+        public QRCheckHttpLogWriter(LogbookProperties properties) {
             logger = getLogger(properties.getName());
         }
 

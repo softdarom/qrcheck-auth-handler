@@ -11,7 +11,7 @@ import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
 import java.util.Set;
 
-@Slf4j(topic = "AUTH-HANDLER-BUILDER")
+@Slf4j(topic = "BUILDER")
 public final class UserDtoBuilder {
 
     private final Set<RoleDto> roles;
@@ -27,7 +27,7 @@ public final class UserDtoBuilder {
     }
 
     public UserDto build() {
-        LOGGER.debug("Building a UserDto by {}", JsonHelper.asJson(providerToken));
+        LOGGER.debug("Создание объекта UserDto из {}", JsonHelper.asJson(providerToken));
         var tokens = Set.of(buildTokens());
         return UserDto.builder()
                 .externalUserId(userId)

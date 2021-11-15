@@ -9,8 +9,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
-import ru.softdarom.qrcheck.auth.handler.config.property.SwaggerProperties;
+import ru.softdarom.qrcheck.auth.handler.config.property.OpenApiProperties;
+import ru.softdarom.security.oauth2.config.property.ApiKeyProperties;
 
 @Configuration
 public class OpenApiConfig {
@@ -20,10 +20,10 @@ public class OpenApiConfig {
     private static final String LICENCE = "Лицензия API";
     private static final String API_KEY_DESCRIPTION = "Аутентификация через ApiKey";
 
-    private final SwaggerProperties properties;
+    private final OpenApiProperties properties;
 
     @Autowired
-    OpenApiConfig(SwaggerProperties properties) {
+    OpenApiConfig(OpenApiProperties properties) {
         this.properties = properties;
     }
 
@@ -41,7 +41,7 @@ public class OpenApiConfig {
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .name(apiKeyProperties.getName())
+                                .name(apiKeyProperties.getHeaderName())
                                 .description(API_KEY_DESCRIPTION)
                 );
     }

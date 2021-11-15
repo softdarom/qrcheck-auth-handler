@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-SERVICE")
+@Slf4j(topic = "SERVICE")
 public class TokenRefreshServiceImpl implements TokenRefreshService {
 
     private final AccessTokenAccessService accessTokenAccessService;
@@ -41,7 +41,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
     @Transactional
     public RefreshTokenResponse refresh(String accessToken) {
         Assert.hasText(accessToken, "The 'accessToken' must not be null or empty!");
-        LOGGER.info("Refreshing an access token: {}", accessToken);
+        LOGGER.info("Обновление токена доступа: {}", accessToken);
         var foundAccessToken =
                 accessTokenAccessService.findByToken(accessToken)
                         .orElseThrow(() -> new NotFoundException("Access token not found by " + accessToken));

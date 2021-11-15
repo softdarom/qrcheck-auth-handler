@@ -32,14 +32,14 @@ spring:
     template:
       check-template-location: false
   security:
-    api-key:
-      name: X-ApiKey-Authorization
-      token:
-        incoming:
-          - 89414993-6e9f-45e6-a0ec-9eb5b7cbb2fe #user-handler
-          - fc28c7e5-fb14-4335-9aa1-e0921cfdd4b9 #google-auth
-          - 3f877c2e-c378-46c9-9737-7aed66aed8d5 #events
-        outgoing: d88d2dab-4002-4d7c-b259-d9682df4f22b
+    qrcheck:
+      api-key:
+        hasApiKeyAuth: true
+        token:
+          outgoing: ${API_KEY_OUTGOING}
+          incoming: ${API_KEY_INCOMING}
+      oauth2:
+        enabled: false
 
 springdoc:
   api-docs:
@@ -59,17 +59,16 @@ springdoc:
 outbound:
   feign:
     google-auth:
-#      host: "http://localhost:${OUTBOUND_FEIGN_GOOGLE_AUTH_PORT}/oauth2"
-      host: "https://google-auth.test.qrchk.ru/oauth2"
+      host: ${AUTH_HANDLER_URL}
     user-handler:
-      host: "http://localhost:${OUTBOUND_FEIGN_USER_HANDLER_PORT}/inner"
+      host: ${USER_HANDLER_URL}
 
 logbook:
   strategy: body-only-if-status-at-least
   format:
     style: http
   logger:
-    name: AUTH-HANDLER-REST
+    name: REST
   exclude:
     - /actuator/**
     - /v3/api-docs/**

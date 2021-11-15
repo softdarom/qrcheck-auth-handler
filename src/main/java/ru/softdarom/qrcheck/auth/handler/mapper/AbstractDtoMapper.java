@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@Slf4j(topic = "GEOMAGNETIC-MAPPER")
+@Slf4j(topic = "MAPPER")
 public abstract class AbstractDtoMapper<S, D> implements DtoMapper<S, D> {
 
     private static final String NOT_NULL_DESTINATION_ERROR_MESSAGE = "A destination shouldn't be null!";
@@ -32,28 +32,28 @@ public abstract class AbstractDtoMapper<S, D> implements DtoMapper<S, D> {
     @Override
     public S convertToSource(D destination) {
         Assert.notNull(destination, NOT_NULL_DESTINATION_ERROR_MESSAGE);
-        LOGGER.debug("Map to an 'entity'. A 'dto': {}", destination);
+        LOGGER.debug("Преобразование в 'entity' из 'dto': {}", destination);
         return modelMapper.map(destination, sourceClass);
     }
 
     @Override
     public D convertToDestination(S source) {
         Assert.notNull(source, NOT_NULL_SOURCE_ERROR_MESSAGE);
-        LOGGER.debug("Map to a 'dto'. An 'entity': {}", source);
+        LOGGER.debug("Преобразование в 'dto' из 'entity': {}", source);
         return modelMapper.map(source, destinationClass);
     }
 
     @Override
     public Set<S> convertToSources(Collection<D> collection) {
         Assert.notNull(collection, NOT_NULL_COLLECTION_ERROR_MESSAGE);
-        LOGGER.debug("A collection of dtos is mapped to a collection of entities");
+        LOGGER.debug("Преобразования коллекции dto в коллекцию entity");
         return collection.stream().map(this::convertToSource).collect(Collectors.toSet());
     }
 
     @Override
     public Set<D> convertToDestinations(Collection<S> collection) {
         Assert.notNull(collection, NOT_NULL_COLLECTION_ERROR_MESSAGE);
-        LOGGER.debug("A collection of entities is mapped to a collection of dtos");
+        LOGGER.debug("Преобразования коллекции entity в коллекцию dto");
         return collection.stream().map(this::convertToDestination).collect(Collectors.toSet());
     }
 

@@ -23,8 +23,15 @@ configurations {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    maven {
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
+            password = project.findProperty("gpr.token") ?: System.getenv("GPR_TOKEN")
+        }
+        url = uri("https://maven.pkg.github.com/softdarom/packages")
+    }
+    mavenLocal()
 }
 
 ext {
@@ -40,6 +47,7 @@ ext {
     set("swaggerVersion", "1.5.9")
     set("logbackVersion", "1.2.3")
     set("logstashVersion", "5.2")
+    set("qrcheckSecurityStarterVersion", "1.0.1")
     set("postgresVersion", "42.2.5")
     set("snakeyamlVersion", "1.29")
     set("junitVersion", "5.4.2")
@@ -71,6 +79,7 @@ dependencies {
     api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
     api "org.springdoc:springdoc-openapi-ui:${swaggerVersion}"
     api "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
+    api "ru.softdarom.security:qrcheck-security-starter:${qrcheckSecurityStarterVersion}"
 
     runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
