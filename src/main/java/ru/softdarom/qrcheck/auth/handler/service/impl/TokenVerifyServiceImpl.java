@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-SERVICE")
+@Slf4j(topic = "SERVICE")
 public class TokenVerifyServiceImpl implements TokenVerifyService {
 
     private final AccessTokenAccessService accessTokenAccessService;
@@ -42,10 +42,10 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
     @Override
     public AbstractOAuth2TokenInfoResponse verify(String accessToken) {
         Assert.hasText(accessToken, "The 'accessToken' must not be null or empty!");
-        LOGGER.info("Checking an access token: {}", accessToken);
+        LOGGER.info("Проверка токена доступа: {}", accessToken);
         var optionalFoundAccessToken = accessTokenAccessService.findByToken(accessToken);
         if (optionalFoundAccessToken.isEmpty()) {
-            LOGGER.warn("A token not found!");
+            LOGGER.warn("Токен не найден!");
             return AbstractOAuth2TokenInfoResponse.incorrectToken();
         }
         var foundAccessToken = optionalFoundAccessToken.get();
@@ -54,9 +54,9 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
         var accessTokenActive = isActiveAccessToken(foundAccessToken);
         var refreshTokenActive = isActiveRefreshToken(foundAccessToken);
 
-        LOGGER.debug("Expired: {}", notExpired);
-        LOGGER.debug("Access token active: {}", accessTokenActive);
-        LOGGER.debug("Refresh token active: {}", refreshTokenActive);
+        LOGGER.debug("Истекает: {}", notExpired);
+        LOGGER.debug("Токен доступа активен: {}", accessTokenActive);
+        LOGGER.debug("Токен обновления активен: {}", refreshTokenActive);
 
         if (notExpired && accessTokenActive && refreshTokenActive) {
             var tokenInfo = oAuth2ProviderService.getTokenInfo(accessToken, foundAccessToken.getProvider());
@@ -64,7 +64,7 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
             tokenInfo.setUserId(foundAccessToken.getRefreshToken().getUser().getId());
             return tokenInfo;
         } else {
-            LOGGER.info("A token is expired.");
+            LOGGER.info("Срок действия токена истёк");
             return AbstractOAuth2TokenInfoResponse.expiredToken();
         }
     }

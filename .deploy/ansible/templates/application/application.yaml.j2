@@ -32,11 +32,14 @@ spring:
     template:
       check-template-location: false
   security:
-    api-key:
-      name: X-ApiKey-Authorization
-      token:
-        incoming: ${API_KEY_INCOMING}
-        outgoing: ${API_KEY_OUTGOING}
+    qrcheck:
+      api-key:
+        hasApiKeyAuth: true
+        token:
+          outgoing: ${API_KEY_OUTGOING}
+          incoming: ${API_KEY_INCOMING}
+      oauth2:
+        enabled: false
 
 springdoc:
   api-docs:
@@ -46,7 +49,7 @@ springdoc:
     path: "/"
   info:
     title: Auth Handler RESTful API
-    description: Сервис управления аутентификцией
+    description: Сервис управления аутентификацией
     version: {{ lookup('env', 'DOCKER_VERSION') | default('unknown') }}
     licence-url: https://qrchk.ru/licence
     owner-name: QRCheck
@@ -55,8 +58,6 @@ springdoc:
 
 outbound:
   feign:
-    google-auth:
-      host: http://google-auth:8000/oauth2
     user-handler:
       host: http://user-handler:8000/inner
 
@@ -68,5 +69,5 @@ logbook:
   format:
     style: {{ logbook.format.style | default('http') }}
   logger:
-    name: AUTH-HANDLER-REST
+    name: REST
   exclude: {{ logbook.exclude | join(', ') }}

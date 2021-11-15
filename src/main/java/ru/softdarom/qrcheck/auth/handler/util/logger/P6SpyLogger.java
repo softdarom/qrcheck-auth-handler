@@ -6,7 +6,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.util.Objects;
 
-@Slf4j(topic = "AUTH-HANDLER-SQL")
+@Slf4j(topic = "SQL")
 public class P6SpyLogger extends Slf4JLogger {
 
     private static final String SLF4J_LOGGER_NAME = "log";

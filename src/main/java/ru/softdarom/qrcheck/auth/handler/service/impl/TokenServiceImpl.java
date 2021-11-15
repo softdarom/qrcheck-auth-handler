@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Service
-@Slf4j(topic = "AUTH-HANDLER-SERVICE")
+@Slf4j(topic = "SERVICE")
 public class TokenServiceImpl implements TokenService {
 
     private final RoleAccessService roleAccessService;

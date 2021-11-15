@@ -14,7 +14,7 @@ import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Slf4j(topic = "AUTH-HANDLER-BUILDER")
+@Slf4j(topic = "BUILDER")
 public final class AccessTokenDtoBuilder {
 
     public static class ByProviderTokenDto {
@@ -30,7 +30,7 @@ public final class AccessTokenDtoBuilder {
         }
 
         public AccessTokenDto build() {
-            LOGGER.debug("Building an AccessTokenDto by {} for provider {}", JsonHelper.asJson(accessToken), provider);
+            LOGGER.debug("Создание объекта AccessTokenDto из {} для провайдера {}", JsonHelper.asJson(accessToken), provider);
             return AccessTokenDto.builder()
                     .token(accessToken.getToken())
                     .issued(accessToken.getIssuedAt())
@@ -53,7 +53,7 @@ public final class AccessTokenDtoBuilder {
         }
 
         public AccessTokenDto build() {
-            LOGGER.debug("Building an AccessTokenDto by {} for provider {}", JsonHelper.asJson(oAuth2AccessToken), refreshToken.getProvider());
+            LOGGER.debug("Создание объекта AccessTokenDto из {} для провайдера {}", JsonHelper.asJson(oAuth2AccessToken), refreshToken.getProvider());
             return AccessTokenDto.builder()
                     .token(oAuth2AccessToken.getToken())
                     .issued(LocalDateTime.now().minusMinutes(1L))

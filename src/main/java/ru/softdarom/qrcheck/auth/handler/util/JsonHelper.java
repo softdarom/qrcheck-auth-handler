@@ -17,7 +17,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Slf4j(topic = "AUTH-HADNLER-UTIL")
+@Slf4j(topic = "UTIL")
 public final class JsonHelper {
 
     private static final String DATE_PATTERN = "dd.MM.yyyy";
@@ -38,7 +38,7 @@ public final class JsonHelper {
         try {
             return MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            LOGGER.error("Error mapping to json! Return an 'unknown' value!", e);
+            LOGGER.error("Ошибка при преобразовании в json! Вернуть значение 'unknown'!", e);
             return "unknown";
         }
     }

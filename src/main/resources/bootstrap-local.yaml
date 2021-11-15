@@ -1,6 +1,6 @@
 spring:
   application:
-    name: google-auth
+    name: auth-handler
   cloud:
     kubernetes:
       enabled: false

@@ -1,27 +1,30 @@
 package ru.softdarom.qrcheck.auth.handler.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final ApiKeyAuthorizationConfig.ApiKeyAuthorizationFilter apiKeyAuthorizationFilter;
-    private final ApiKeyAuthorizationConfig.KeyApiAuthenticationProvider keyApiAuthenticationProvider;
-    private final AuthenticationEntryPoint defaultAuthenticationEntryPoint;
+    private final AbstractPreAuthenticatedProcessingFilter apiKeyAuthorizationFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    WebSecurityConfig(ApiKeyAuthorizationConfig.ApiKeyAuthorizationFilter apiKeyAuthorizationFilter,
-                      ApiKeyAuthorizationConfig.KeyApiAuthenticationProvider keyApiAuthenticationProvider,
-                      AuthenticationEntryPoint defaultAuthenticationEntryPoint) {
+    WebSecurityConfig(@Qualifier("qrCheckApiKeyAuthorizationFilter") AbstractPreAuthenticatedProcessingFilter apiKeyAuthorizationFilter,
+                      @Qualifier("qrCheckAuthenticationProvider") AuthenticationProvider authenticationProvider,
+                      @Qualifier("qrCheckAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint) {
         this.apiKeyAuthorizationFilter = apiKeyAuthorizationFilter;
-        this.keyApiAuthenticationProvider = keyApiAuthenticationProvider;
-        this.defaultAuthenticationEntryPoint = defaultAuthenticationEntryPoint;
+        this.authenticationProvider = authenticationProvider;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Override
@@ -35,7 +38,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable()
                 .addFilter(apiKeyAuthorizationFilter)
-                .authenticationProvider(keyApiAuthenticationProvider)
+                .authenticationProvider(authenticationProvider)
                 .authorizeRequests(request ->
                         request
                                 .antMatchers("/tokens/refresh").permitAll()
@@ -44,7 +47,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .exceptionHandling(handlerConfigurer -> handlerConfigurer.authenticationEntryPoint(defaultAuthenticationEntryPoint));
+                    .exceptionHandling(handlerConfigurer -> handlerConfigurer.authenticationEntryPoint(authenticationEntryPoint));
         // @formatter:on
     }
 

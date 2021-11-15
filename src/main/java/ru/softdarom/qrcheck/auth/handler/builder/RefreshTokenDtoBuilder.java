@@ -7,7 +7,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
-@Slf4j(topic = "AUTH-HANDLER-BUILDER")
+@Slf4j(topic = "BUILDER")
 public final class RefreshTokenDtoBuilder {
 
     private final ProviderTokenDto.RefreshToken refreshToken;
@@ -21,7 +21,7 @@ public final class RefreshTokenDtoBuilder {
     }
 
     public RefreshTokenDto build() {
-        LOGGER.debug("Building a RefreshTokenDto by {} for provider {}", JsonHelper.asJson(refreshToken), provider);
+        LOGGER.debug("Создание объекта RefreshTokenDto из {} для провайдера {}", JsonHelper.asJson(refreshToken), provider);
         return RefreshTokenDto.builder()
                 .token(refreshToken.getToken())
                 .issued(refreshToken.getIssuedAt())
