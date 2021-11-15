@@ -11,6 +11,6 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderUserDto;
 public interface UserHandlerClient {
 
     @PostMapping("/users")
-    ResponseEntity<ProviderUserDto> save(@RequestHeader("X-ApiKey-Authorization") String apiKey, @RequestBody ProviderUserDto request);
-
+    ResponseEntity<ProviderUserDto> save(@RequestHeader("X-ApiKey-Authorization") String apiKey,
+                                         @RequestBody ProviderUserDto request);
 }
