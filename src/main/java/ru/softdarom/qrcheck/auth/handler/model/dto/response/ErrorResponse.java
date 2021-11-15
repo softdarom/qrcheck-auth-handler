@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Generated
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BaseResponse {
+public class ErrorResponse {
 
     private String message;
 

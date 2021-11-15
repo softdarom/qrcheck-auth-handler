@@ -1,4 +1,4 @@
-package ru.softdarom.qrcheck.auth.handler.config;
+package ru.softdarom.qrcheck.auth.handler.config.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

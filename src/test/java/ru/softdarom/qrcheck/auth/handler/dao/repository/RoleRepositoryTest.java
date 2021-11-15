@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import ru.softdarom.qrcheck.auth.handler.dao.entity.RoleEntity;
+import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.util.Set;
@@ -23,7 +24,6 @@ import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.IN
 @DisplayName("RoleRepository Spring Integration Test")
 class RoleRepositoryTest extends AbstractIntegrationTest {
 
-    private static final String DEFAULT_ROLE = "ROLE_USER";
     private static final Integer DEFAULT_SIZE_ROLES = 1;
 
     @Autowired
@@ -34,22 +34,34 @@ class RoleRepositoryTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("findAllByNameIn(): returns collection of roles")
     void successfulFindAllByNameIn() {
-        var actual = assertDoesNotThrow(() -> repository.findAllByNameIn(Set.of(DEFAULT_ROLE)));
+        var actual = assertDoesNotThrow(() -> repository.findByName(RoleType.USER));
         assertAll(() -> {
-            assertNotNull(actual);
-            assertEquals(DEFAULT_SIZE_ROLES, actual.size());
+            assertFalse(actual.isEmpty());
+            assertEquals(RoleType.USER, actual.get().getName());
         });
     }
 
     @ParameterizedTest
-    @ValueSource(longs = {1L, 2L})
+    @ValueSource(longs = {1L, 2L, 3L})
     @DisplayName("findAllByUserId(): returns collection of roles by userId")
     void successfulFindAllByUserId(Long userId) {
         var actual = assertDoesNotThrow(() -> repository.findAllByUserId(userId));
         assertAll(() -> {
             assertNotNull(actual);
             assertEquals(DEFAULT_SIZE_ROLES, actual.size());
-            assertEquals(Set.of(DEFAULT_ROLE), actual.stream().map(RoleEntity::getName).collect(Collectors.toSet()));
+            assertEquals(Set.of(RoleType.USER), actual.stream().map(RoleEntity::getName).collect(Collectors.toSet()));
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1L, 2L, 3L})
+    @DisplayName("findAllByExternalUserId(): returns collection of roles by externalUserId")
+    void successfulFindAllByExternalUserId(Long externalUserId) {
+        var actual = assertDoesNotThrow(() -> repository.findAllByExternalUserId(externalUserId));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertEquals(DEFAULT_SIZE_ROLES, actual.size());
+            assertEquals(Set.of(RoleType.USER), actual.stream().map(RoleEntity::getName).collect(Collectors.toSet()));
         });
     }
 }

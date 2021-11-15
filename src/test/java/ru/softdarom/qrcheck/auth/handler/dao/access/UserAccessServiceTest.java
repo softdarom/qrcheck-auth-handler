@@ -1,5 +1,6 @@
 package ru.softdarom.qrcheck.auth.handler.dao.access;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,8 +9,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
+import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.AccessTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserTokenInfoDto;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateLong;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userDto;
 
 @Sql(scripts = "classpath:sql/access/UserAccessService/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
@@ -100,8 +104,20 @@ class UserAccessServiceTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("save()(): throws IllegalArgumentException when a dto is null")
+    @DisplayName("save(): throws IllegalArgumentException when a dto is null")
     void failureSaveNullDto() {
         assertThrows(IllegalArgumentException.class, () -> userAccessService.save(null));
+    }
+
+    @Test
+    @DisplayName("save(): throws IllegalArgumentException when externalUserId is null")
+    void failureChangeRoleNullExternalUserId() {
+        assertThrows(IllegalArgumentException.class, () -> userAccessService.changeRole(null, RoleType.USER));
+    }
+
+    @Test
+    @DisplayName("save(): throws NotFoundException when role is null")
+    void failureChangeRoleNullRole() {
+        assertThrows(NotFoundException.class, () -> userAccessService.changeRole(generateLong(), null));
     }
 }

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Generated
@@ -26,11 +28,17 @@ public class RoleEntity {
     private Long id;
 
     @Column(name = "name", nullable = false, updatable = false)
-    private String name;
+    private RoleType name;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Set<UserEntity> users = new HashSet<>();
+
+    public void addUser(UserEntity user) {
+        if (Objects.nonNull(user)) {
+            this.users.add(user);
+        }
+    }
 
     @Override
     public String toString() {

@@ -6,8 +6,9 @@ import java.util.Set;
 
 public interface RoleAccessService {
 
-    Set<RoleDto> defaultRoles();
+    RoleDto defaultRole();
 
     Set<RoleDto> findByUserId(Long userId);
 
+    Set<RoleDto> findByExternalUserId(Long externalUserId);
 }

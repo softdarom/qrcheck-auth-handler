@@ -10,11 +10,11 @@ import org.springframework.http.*;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 import ru.softdarom.security.oauth2.config.property.ApiKeyProperties;
 
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateString;
 import static ru.softdarom.qrcheck.auth.handler.test.helper.UriHelper.generateUri;
 
 abstract class AbstractControllerTest extends AbstractIntegrationTest {
@@ -40,6 +40,10 @@ abstract class AbstractControllerTest extends AbstractIntegrationTest {
 
     protected <T> ResponseEntity<T> post(HttpHeaders headers, String path) {
         return exchange(null, HttpMethod.POST, headers, path);
+    }
+
+    protected <T> ResponseEntity<T> put(HttpHeaders headers, String path) {
+        return exchange(null, HttpMethod.PUT, headers, path);
     }
 
     protected <T, R> ResponseEntity<T> post(R request, HttpHeaders headers, String path) {
@@ -69,14 +73,14 @@ abstract class AbstractControllerTest extends AbstractIntegrationTest {
 
     protected HttpHeaders buildApiKeyHeader() {
         var headers = new HttpHeaders();
+        headers.set("X-Application-Version", generateString());
         headers.set(apiKeyProperties.getHeaderName(), apiKeyProperties.getToken().getIncoming().stream().findAny().orElseThrow());
         return headers;
     }
 
     protected HttpHeaders buildNotAuthHeader() {
-//        var headers = new HttpHeaders();
-//        headers.set(apiKeyProperties.getHeaderName(), UUID.randomUUID().toString());
-//        return headers;
-        return new HttpHeaders();
+        var headers = new HttpHeaders();
+        headers.set("X-Application-Version", generateString());
+        return headers;
     }
 }

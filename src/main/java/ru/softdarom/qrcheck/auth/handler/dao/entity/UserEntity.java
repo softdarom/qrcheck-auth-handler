@@ -82,6 +82,16 @@ public class UserEntity {
         }
     }
 
+    public void setRoles(Set<RoleEntity> roles) {
+        if (Objects.nonNull(roles)) {
+            this.roles.clear();
+            roles.forEach(it -> it.addUser(this));
+            this.roles.addAll(roles);
+        } else {
+            this.tokenInfo = new HashSet<>();
+        }
+    }
+
     @PrePersist
     private void onCreate() {
         var current = LocalDateTime.now();

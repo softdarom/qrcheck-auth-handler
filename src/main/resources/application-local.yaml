@@ -59,7 +59,7 @@ springdoc:
 outbound:
   feign:
     google-auth:
-      host: ${AUTH_HANDLER_URL}
+      host: ${GOOGLE_AUTH_URL}
     user-handler:
       host: ${USER_HANDLER_URL}
 

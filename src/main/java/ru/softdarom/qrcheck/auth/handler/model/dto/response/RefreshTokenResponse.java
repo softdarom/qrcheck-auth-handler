@@ -10,7 +10,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenResponse extends BaseResponse {
+public class RefreshTokenResponse {
 
     @JsonProperty("accessToken")
     private String accessToken;

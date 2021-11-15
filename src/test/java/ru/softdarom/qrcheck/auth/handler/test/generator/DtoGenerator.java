@@ -2,6 +2,7 @@ package ru.softdarom.qrcheck.auth.handler.test.generator;
 
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
+import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderUserDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.*;
@@ -85,7 +86,7 @@ public final class DtoGenerator {
     public static RoleDto roleDto() {
         var dto = new RoleDto();
         dto.setId(generateLong());
-        dto.setName("ROLE_USER");
+        dto.setName(RoleType.USER);
         return dto;
     }
 
@@ -146,5 +147,9 @@ public final class DtoGenerator {
 
     public static RefreshTokenResponse refreshTokenResponse() {
         return new RefreshTokenResponse(UUID.randomUUID().toString());
+    }
+
+    public static UserRoleResponse userRoleResponse() {
+        return new UserRoleResponse(generateLong(), Set.of(RoleType.USER));
     }
 }

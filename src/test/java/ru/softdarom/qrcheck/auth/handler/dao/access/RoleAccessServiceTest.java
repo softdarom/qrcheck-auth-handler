@@ -20,7 +20,6 @@ import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.IN
 class RoleAccessServiceTest extends AbstractIntegrationTest {
 
     private static final Integer DEFAULT_SIZE_ROLES_FOR_USERS = 1;
-    private static final Integer DEFAULT_SIZE_DEFAULT_ROLES = 1;
 
     @Autowired
     private RoleAccessService roleAccessService;
@@ -28,20 +27,28 @@ class RoleAccessServiceTest extends AbstractIntegrationTest {
     //  -----------------------   successful tests   -------------------------
 
     @Test
-    @DisplayName("find(): returns default roles")
+    @DisplayName("find(): returns default role")
     void successfulFind() {
-        var actual = assertDoesNotThrow(roleAccessService::defaultRoles);
+        var actual = assertDoesNotThrow(roleAccessService::defaultRole);
+        assertNotNull(actual);
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1L, 2L, 3L})
+    @DisplayName("findByUserId(): returns roles by user id")
+    void successfulFindByUserId(Long userId) {
+        var actual = assertDoesNotThrow(() -> roleAccessService.findByUserId(userId));
         assertAll(() -> {
             assertNotNull(actual);
-            assertEquals(DEFAULT_SIZE_DEFAULT_ROLES, actual.size());
+            assertEquals(DEFAULT_SIZE_ROLES_FOR_USERS, actual.size());
         });
     }
 
     @ParameterizedTest
     @ValueSource(longs = {1L, 2L, 3L})
-    @DisplayName("findByUserId(): returns roles")
-    void successfulFindByUserId(Long id) {
-        var actual = assertDoesNotThrow(() -> roleAccessService.findByUserId(id));
+    @DisplayName("findByExternalUserId(): returns roles by externalUserId")
+    void successfulFindByExternalUserId(Long externalUserId) {
+        var actual = assertDoesNotThrow(() -> roleAccessService.findByExternalUserId(externalUserId));
         assertAll(() -> {
             assertNotNull(actual);
             assertEquals(DEFAULT_SIZE_ROLES_FOR_USERS, actual.size());
@@ -54,5 +61,11 @@ class RoleAccessServiceTest extends AbstractIntegrationTest {
     @DisplayName("findByUserId(): throws IllegalArgumentException when a user id is null")
     void failureFindByUserIdNullUserId() {
         assertThrows(IllegalArgumentException.class, () -> roleAccessService.findByUserId(null));
+    }
+
+    @Test
+    @DisplayName("findByExternalUserId(): throws IllegalArgumentException when a externalUserId is null")
+    void failureFindByExternalUserIdNullUserId() {
+        assertThrows(IllegalArgumentException.class, () -> roleAccessService.findByExternalUserId(null));
     }
 }

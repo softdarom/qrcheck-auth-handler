@@ -1,6 +1,5 @@
 package ru.softdarom.qrcheck.auth.handler.controller;
 
-import feign.FeignException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +11,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.TokenValidType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.AbstractOAuth2TokenInfoResponse;
-import ru.softdarom.qrcheck.auth.handler.model.dto.response.BaseResponse;
+import ru.softdarom.qrcheck.auth.handler.model.dto.response.ErrorResponse;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.GoogleTokenInfoResponse;
 import ru.softdarom.qrcheck.auth.handler.rest.controller.TokenController;
 import ru.softdarom.qrcheck.auth.handler.service.TokenService;
@@ -25,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
 
+@DisplayName("TokenController Spring Integration Test")
 class TokenControllerTest extends AbstractControllerTest {
 
     private static final String URI_TOKENS_SAVE = "/tokens/info";
@@ -135,7 +135,7 @@ class TokenControllerTest extends AbstractControllerTest {
     @DisplayName("verify(): returns 403 when not authentication")
     void failureVerifyUnauthorized() {
         var uri = URI_TOKENS_VERIFY + "?accessToken=" + UUID.randomUUID();
-        var actual = assertDoesNotThrow(() -> get(BaseResponse.class, buildNotAuthHeader(), uri));
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildNotAuthHeader(), uri));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.FORBIDDEN);
             verify(tokenServiceMock, never()).verify(any());
@@ -147,7 +147,7 @@ class TokenControllerTest extends AbstractControllerTest {
     void failureVerifyNotFound() {
         var uri = URI_TOKENS_VERIFY + "?accessToken=" + UUID.randomUUID();
         when(tokenServiceMock.verify(any())).thenThrow(NotFoundException.class);
-        var actual = assertDoesNotThrow(() -> get(BaseResponse.class, buildApiKeyHeader(), uri));
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), uri));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.NOT_FOUND);
             verify(tokenServiceMock).verify(any());
@@ -159,21 +159,10 @@ class TokenControllerTest extends AbstractControllerTest {
     void failureRefreshNotFound() {
         var uri = URI_TOKENS_REFRESH + "?accessToken=" + UUID.randomUUID();
         when(tokenServiceMock.refresh(any())).thenThrow(NotFoundException.class);
-        var actual = assertDoesNotThrow(() -> post(BaseResponse.class, buildApiKeyHeader(), uri));
+        var actual = assertDoesNotThrow(() -> post(ErrorResponse.class, buildApiKeyHeader(), uri));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.NOT_FOUND);
             verify(tokenServiceMock).refresh(any());
-        });
-    }
-
-    @Test
-    @DisplayName("save(): returns 401 when the feign client throws Unauthorized")
-    void failureSaveFeignUnauthorized() {
-        when(tokenServiceMock.saveOAuth2TokenInfo(any())).thenThrow(FeignException.Unauthorized.class);
-        var actual = assertDoesNotThrow(() -> post(tokenUserInfoRequest(), buildApiKeyHeader(), URI_TOKENS_SAVE));
-        assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
-            verify(tokenServiceMock).saveOAuth2TokenInfo(any());
         });
     }
 
@@ -193,7 +182,7 @@ class TokenControllerTest extends AbstractControllerTest {
     void failureVerifyUnknownException() {
         var uri = URI_TOKENS_VERIFY + "?accessToken=" + UUID.randomUUID();
         when(tokenServiceMock.verify(any())).thenThrow(RuntimeException.class);
-        var actual = assertDoesNotThrow(() -> get(BaseResponse.class, buildApiKeyHeader(), uri));
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), uri));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
             verify(tokenServiceMock).verify(any());

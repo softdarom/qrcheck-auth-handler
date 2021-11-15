@@ -13,7 +13,7 @@ import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = false)
-public class TokenUserInfoResponse extends BaseResponse {
+public class TokenUserInfoResponse {
 
     @JsonProperty("user")
     private final ProviderUserDto user;
