@@ -29,19 +29,22 @@ public class TokenController {
 
     @ApiSaveToken
     @PostMapping("/info")
-    public ResponseEntity<TokenUserInfoResponse> save(@Valid @RequestBody TokenUserInfoRequest request) {
+    public ResponseEntity<TokenUserInfoResponse> save(@RequestHeader(value = "X-Application-Version", required = false) String version,
+                                                      @Valid @RequestBody TokenUserInfoRequest request) {
         return ResponseEntity.ok(tokenService.saveOAuth2TokenInfo(request));
     }
 
     @ApVerifyToken
     @GetMapping("/verify")
-    public ResponseEntity<AbstractOAuth2TokenInfoResponse> verify(@RequestParam String accessToken) {
+    public ResponseEntity<AbstractOAuth2TokenInfoResponse> verify(@RequestHeader(value = "X-Application-Version", required = false) String version,
+                                                                  @RequestParam String accessToken) {
         return ResponseEntity.ok(tokenService.verify(accessToken));
     }
 
     @ApiRefreshToken
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshTokenResponse> refresh(@RequestParam String accessToken) {
+    public ResponseEntity<RefreshTokenResponse> refresh(@RequestHeader(value = "X-Application-Version", required = false) String version,
+                                                        @RequestParam String accessToken) {
         return ResponseEntity.ok(tokenService.refresh(accessToken));
     }
 }
