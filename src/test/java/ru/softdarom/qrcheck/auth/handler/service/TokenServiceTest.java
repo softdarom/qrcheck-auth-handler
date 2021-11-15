@@ -73,13 +73,13 @@ class TokenServiceTest extends AbstractIntegrationTest {
     @DisplayName("saveOAuth2TokenInfo(): returns TokenUserInfoResponse when a new user")
     void successfulSaveOAuth2TokenInfoNewUser(ProviderType provider) {
         when(userHandlerServiceMock.saveUser(any())).thenReturn(Optional.of(generateLong()));
-        when(roleAccessServiceMock.defaultRoles()).thenReturn(Set.of(roleDto()));
+        when(roleAccessServiceMock.defaultRole()).thenReturn(roleDto());
         when(userAccessServiceMock.findByExternalUserId(any())).thenReturn(Optional.empty());
         var actual = assertDoesNotThrow(() -> service.saveOAuth2TokenInfo(tokenUserInfoRequest(provider)));
         assertAll(() -> {
             assertNotNull(actual);
             verify(userHandlerServiceMock).saveUser(any());
-            verify(roleAccessServiceMock).defaultRoles();
+            verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
             verify(tokenRefreshServiceMock, never()).disableOldRefreshToken(any(), any());
@@ -92,13 +92,13 @@ class TokenServiceTest extends AbstractIntegrationTest {
     @DisplayName("saveOAuth2TokenInfo(): returns TokenUserInfoResponse when a new user")
     void successfulSaveOAuth2TokenInfoExistedUser(ProviderType provider) {
         when(userHandlerServiceMock.saveUser(any())).thenReturn(Optional.of(generateLong()));
-        when(roleAccessServiceMock.defaultRoles()).thenReturn(Set.of(roleDto()));
+        when(roleAccessServiceMock.defaultRole()).thenReturn(roleDto());
         when(userAccessServiceMock.findByExternalUserId(any())).thenReturn(Optional.of(userDto(provider)));
         var actual = assertDoesNotThrow(() -> service.saveOAuth2TokenInfo(tokenUserInfoRequest(provider)));
         assertAll(() -> {
             assertNotNull(actual);
             verify(userHandlerServiceMock).saveUser(any());
-            verify(roleAccessServiceMock).defaultRoles();
+            verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
             verify(tokenRefreshServiceMock).disableOldRefreshToken(any(), any());

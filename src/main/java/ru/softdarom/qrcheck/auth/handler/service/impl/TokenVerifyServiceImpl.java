@@ -8,6 +8,7 @@ import ru.softdarom.qrcheck.auth.handler.dao.access.AccessTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RefreshTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
+import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.AccessTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RoleDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.AbstractOAuth2TokenInfoResponse;
@@ -89,6 +90,7 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
         return roleAccessService.findByUserId(userId)
                 .stream()
                 .map(RoleDto::getName)
+                .map(RoleType::getRole)
                 .collect(Collectors.toSet());
     }
 }

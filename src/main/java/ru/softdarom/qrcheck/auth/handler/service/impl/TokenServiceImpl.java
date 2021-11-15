@@ -68,8 +68,8 @@ public class TokenServiceImpl implements TokenService {
 
     private void saveOrUpdate(TokenUserInfoRequest request, Long savedExternalUserId) {
         request.getUser().setId(savedExternalUserId);
-        var roles = roleAccessService.defaultRoles();
-        var dto = new UserDtoBuilder(request, roles).build();
+        var roles = roleAccessService.defaultRole();
+        var dto = new UserDtoBuilder(request, Set.of(roles)).build();
         var optionalExistedUser = userAccessService.findByExternalUserId(savedExternalUserId);
         if (optionalExistedUser.isPresent()) {
             var existedUser = optionalExistedUser.get();

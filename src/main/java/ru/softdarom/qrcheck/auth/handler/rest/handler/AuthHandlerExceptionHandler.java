@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
-import ru.softdarom.qrcheck.auth.handler.model.dto.response.BaseResponse;
+import ru.softdarom.qrcheck.auth.handler.model.dto.response.ErrorResponse;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -15,21 +15,21 @@ import static org.springframework.http.HttpStatus.*;
 public class AuthHandlerExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    ResponseEntity<BaseResponse> notFound(NotFoundException e) {
+    ResponseEntity<ErrorResponse> notFound(NotFoundException e) {
         LOGGER.error(e.getMessage(), e);
-        return ResponseEntity.status(NOT_FOUND).body(new BaseResponse(e.getMessage()));
+        return ResponseEntity.status(NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(FeignException.Unauthorized.class)
-    ResponseEntity<BaseResponse> unauthorizedException(FeignException.Unauthorized e) {
+    ResponseEntity<ErrorResponse> unauthorizedException(FeignException.Unauthorized e) {
         LOGGER.error(e.getMessage(), e);
-        return ResponseEntity.status(UNAUTHORIZED).body(new BaseResponse(e.getMessage()));
+        return ResponseEntity.status(UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    ResponseEntity<BaseResponse> unknown(Exception e) {
+    ResponseEntity<ErrorResponse> unknown(Exception e) {
         LOGGER.error(e.getMessage(), e);
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new BaseResponse(e.getMessage()));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage()));
     }
 
 }

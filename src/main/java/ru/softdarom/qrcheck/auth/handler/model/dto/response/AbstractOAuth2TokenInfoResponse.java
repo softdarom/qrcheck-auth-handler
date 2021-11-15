@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Generated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = false)
-public abstract class AbstractOAuth2TokenInfoResponse extends BaseResponse {
+public abstract class AbstractOAuth2TokenInfoResponse {
 
     @JsonProperty("user_id")
     private Long userId;

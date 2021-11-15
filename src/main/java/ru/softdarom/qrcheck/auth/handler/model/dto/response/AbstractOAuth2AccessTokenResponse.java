@@ -12,7 +12,7 @@ import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 @Generated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = false)
-public abstract class AbstractOAuth2AccessTokenResponse extends BaseResponse {
+public abstract class AbstractOAuth2AccessTokenResponse {
 
     private String token;
 
