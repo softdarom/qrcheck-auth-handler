@@ -27,7 +27,7 @@ public class UserHandlerServiceImpl implements UserHandlerService {
     @Override
     public Optional<Long> saveUser(ProviderUserDto request) {
         Assert.notNull(request, "The 'request' must not null!");
-        LOGGER.info("Пользователь (id: {}) будет сохранен", request.getEmail());
+        LOGGER.info("A user (email: {}) will be saved.", request.getEmail());
         var apiKey = properties.getToken().getOutgoing();
         return Optional.ofNullable(userHandlerClient.save(apiKey, request).getBody()).map(ProviderUserDto::getId);
     }

@@ -30,7 +30,7 @@ public final class AccessTokenDtoBuilder {
         }
 
         public AccessTokenDto build() {
-            LOGGER.debug("Создание объекта AccessTokenDto из {} для провайдера {}", JsonHelper.asJson(accessToken), provider);
+            LOGGER.debug("Building an AccessTokenDto by {} for provider {}", JsonHelper.asJson(accessToken), provider);
             return AccessTokenDto.builder()
                     .token(accessToken.getToken())
                     .issued(accessToken.getIssuedAt())
@@ -53,7 +53,7 @@ public final class AccessTokenDtoBuilder {
         }
 
         public AccessTokenDto build() {
-            LOGGER.debug("Создание объекта AccessTokenDto из {} для провайдера {}", JsonHelper.asJson(oAuth2AccessToken), refreshToken.getProvider());
+            LOGGER.debug("Building an AccessTokenDto by {} for provider {}", JsonHelper.asJson(oAuth2AccessToken), refreshToken.getProvider());
             return AccessTokenDto.builder()
                     .token(oAuth2AccessToken.getToken())
                     .issued(LocalDateTime.now().minusMinutes(1L))

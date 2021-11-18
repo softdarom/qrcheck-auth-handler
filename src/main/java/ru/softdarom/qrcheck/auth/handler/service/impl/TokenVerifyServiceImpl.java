@@ -43,10 +43,10 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
     @Override
     public AbstractOAuth2TokenInfoResponse verify(String accessToken) {
         Assert.hasText(accessToken, "The 'accessToken' must not be null or empty!");
-        LOGGER.info("Проверка токена доступа: {}", accessToken);
+        LOGGER.info("Checking an access token: {}", accessToken);
         var optionalFoundAccessToken = accessTokenAccessService.findByToken(accessToken);
         if (optionalFoundAccessToken.isEmpty()) {
-            LOGGER.warn("Токен не найден!");
+            LOGGER.warn("A token not found!");
             return AbstractOAuth2TokenInfoResponse.incorrectToken();
         }
         var foundAccessToken = optionalFoundAccessToken.get();
@@ -55,9 +55,9 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
         var accessTokenActive = isActiveAccessToken(foundAccessToken);
         var refreshTokenActive = isActiveRefreshToken(foundAccessToken);
 
-        LOGGER.debug("Истекает: {}", notExpired);
-        LOGGER.debug("Токен доступа активен: {}", accessTokenActive);
-        LOGGER.debug("Токен обновления активен: {}", refreshTokenActive);
+        LOGGER.debug("Expired: {}", notExpired);
+        LOGGER.debug("Access token active: {}", accessTokenActive);
+        LOGGER.debug("Refresh token active: {}", refreshTokenActive);
 
         if (notExpired && accessTokenActive && refreshTokenActive) {
             var tokenInfo = oAuth2ProviderService.getTokenInfo(accessToken, foundAccessToken.getProvider());
@@ -65,7 +65,7 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
             tokenInfo.setUserId(foundAccessToken.getRefreshToken().getUser().getId());
             return tokenInfo;
         } else {
-            LOGGER.info("Срок действия токена истёк");
+            LOGGER.info("A token is not valid.");
             return AbstractOAuth2TokenInfoResponse.expiredToken();
         }
     }

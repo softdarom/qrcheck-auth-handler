@@ -33,10 +33,10 @@ public abstract class AbstractPostgresContainer {
                         .withPassword(DEFAULT_PASSWORD);
 
         postgreSQLContainer.start();
-        LOGGER.info("Postgres стартовал");
-        LOGGER.info("URL базы данных: {}", postgreSQLContainer.getJdbcUrl());
-        LOGGER.info("Username базы данных: {}", postgreSQLContainer.getUsername());
-        LOGGER.info("Password базы данных: {}", postgreSQLContainer.getPassword());
+        LOGGER.info("Postgres started");
+        LOGGER.info("Database url is: {}", postgreSQLContainer.getJdbcUrl());
+        LOGGER.info("Database username is: {}", postgreSQLContainer.getUsername());
+        LOGGER.info("Database password is: {}", postgreSQLContainer.getPassword());
         return postgreSQLContainer;
     }
 

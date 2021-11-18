@@ -21,7 +21,7 @@ public final class RefreshTokenDtoBuilder {
     }
 
     public RefreshTokenDto build() {
-        LOGGER.debug("Создание объекта RefreshTokenDto из {} для провайдера {}", JsonHelper.asJson(refreshToken), provider);
+        LOGGER.debug("Building a RefreshTokenDto by {} for provider {}", JsonHelper.asJson(refreshToken), provider);
         return RefreshTokenDto.builder()
                 .token(refreshToken.getToken())
                 .issued(refreshToken.getIssuedAt())
