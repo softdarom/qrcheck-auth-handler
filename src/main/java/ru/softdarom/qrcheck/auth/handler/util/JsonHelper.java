@@ -38,7 +38,7 @@ public final class JsonHelper {
         try {
             return MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            LOGGER.error("Ошибка при преобразовании в json! Вернуть значение 'unknown'!", e);
+            LOGGER.error("Error mapping to json! Return an 'unknown' value!", e);
             return "unknown";
         }
     }

@@ -41,7 +41,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
     @Transactional
     public RefreshTokenResponse refresh(String accessToken) {
         Assert.hasText(accessToken, "The 'accessToken' must not be null or empty!");
-        LOGGER.info("Обновление токена доступа: {}", accessToken);
+        LOGGER.info("Refreshing an access token: {}", accessToken);
         var foundAccessToken =
                 accessTokenAccessService.findByToken(accessToken)
                         .orElseThrow(() -> new NotFoundException("Access token not found by " + accessToken));

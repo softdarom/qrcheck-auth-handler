@@ -17,7 +17,7 @@ public final class UserTokenInfoDtoBuilder {
     }
 
     public UserTokenInfoDto build() {
-        LOGGER.debug("Создание объекта UserTokenInfoDto из {}", JsonHelper.asJson(providerToken));
+        LOGGER.debug("Building a UserTokenInfoDto by {}", JsonHelper.asJson(providerToken));
         return UserTokenInfoDto.builder()
                 .sub(providerToken.getSub())
                 .provider(providerToken.getProvider())

@@ -28,14 +28,14 @@ public class OAuth2ProviderServiceImpl implements OAuth2ProviderService {
 
     @Override
     public AbstractOAuth2TokenInfoResponse getTokenInfo(String accessToken, ProviderType provider) {
-        LOGGER.info("Получение информации о токене доступа {} и провайдере {}", accessToken, provider);
+        LOGGER.info("Getting token info for an access token {} and a provider {}", accessToken, provider);
         checkClient(provider);
         return providerToClient.get(provider).tokenInfo(accessToken).getBody();
     }
 
     @Override
     public AbstractOAuth2AccessTokenResponse refreshToken(String refreshToken, ProviderType provider) {
-        LOGGER.info("Обновление токена доступа для провайдера '{}' через внешний сервис", provider);
+        LOGGER.info("Refreshing an access token via {} external service", provider);
         checkClient(provider);
         return providerToClient.get(provider).refresh(refreshToken).getBody();
     }

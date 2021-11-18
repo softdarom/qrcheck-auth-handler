@@ -27,7 +27,7 @@ public final class UserDtoBuilder {
     }
 
     public UserDto build() {
-        LOGGER.debug("Создание объекта UserDto из {}", JsonHelper.asJson(providerToken));
+        LOGGER.debug("Building a UserDto by {}", JsonHelper.asJson(providerToken));
         var tokens = Set.of(buildTokens());
         return UserDto.builder()
                 .externalUserId(userId)
