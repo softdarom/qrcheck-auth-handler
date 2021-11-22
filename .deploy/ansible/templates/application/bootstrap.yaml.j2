@@ -17,6 +17,9 @@ spring:
 
 server:
   port: {{ application.port.tcp.number }}
+  tomcat:
+    mbeanregistry:
+      enabled: {{ application.tomcat.mbeanregistry.enabled | default('true') | lower }}
 
 management:
   server:

@@ -10,6 +10,9 @@ spring:
 
 server:
   port: ${APP_PORT}
+  tomcat:
+    mbeanregistry:
+      enabled: true
 
 management:
   server:
