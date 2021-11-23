@@ -47,7 +47,7 @@ ext {
     set("swaggerVersion", "1.5.9")
     set("logbackVersion", "1.2.3")
     set("logstashVersion", "5.2")
-    set("qrcheckSecurityStarterVersion", "1.0.2")
+    set("qrcheckSecurityStarterVersion", "1.2.0")
     set("postgresVersion", "42.2.5")
     set("snakeyamlVersion", "1.29")
     set("junitVersion", "5.4.2")

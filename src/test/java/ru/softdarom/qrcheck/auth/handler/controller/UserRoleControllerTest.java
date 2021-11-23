@@ -73,11 +73,11 @@ class UserRoleControllerTest extends AbstractControllerTest {
     //  -----------------------   failure tests   -------------------------
 
     @Test
-    @DisplayName("getRoles(): returns 403 when not authentication")
+    @DisplayName("getRoles(): returns 401 when not authentication")
     void failureGetRolesUnauthorized() {
         var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildNotAuthHeader(), URI_GET_USER_ROLES));
         assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.FORBIDDEN);
+            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
             verify(userRoleServiceMock, never()).getRoles(any());
         });
     }
@@ -94,12 +94,12 @@ class UserRoleControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @DisplayName("changeRole(): returns 403 when not authentication")
+    @DisplayName("changeRole(): returns 401 when not authentication")
     void failureChangeRoleUnauthorized() {
         var uri = URI_CHANGE_USER_ROLE.replace("%s", RoleType.USER.getApiRole());
         var actual = assertDoesNotThrow(() -> put(buildNotAuthHeader(), uri));
         assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.FORBIDDEN);
+            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
             verify(userRoleServiceMock, never()).changeRole(any(), any());
         });
     }
