@@ -28,8 +28,8 @@ import static ru.softdarom.qrcheck.auth.handler.config.swagger.OpenApiConfig.API
                         }
                 ),
                 @ApiResponse(
-                        responseCode = "403",
-                        description = "Неавторизованный запрос",
+                        responseCode = "401",
+                        description = "Отсутствует авторизация",
                         content = {
                                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
                         }
