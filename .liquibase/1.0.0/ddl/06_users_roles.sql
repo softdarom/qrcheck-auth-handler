@@ -25,3 +25,11 @@ comment on table auth.users_roles is 'A table stores links auth and roles';
 comment on column auth.users_roles.id is 'A primary key of the table';
 comment on column auth.users_roles.user_id is 'Reference on a user id';
 comment on column auth.users_roles.role_id is 'Reference on a role id';
+
+--changeset eekovtun:1.0.0/ddl/users_roles_audit context:!local
+--rollback drop trigger users_roles_audit on auth.users_roles;
+create trigger users_roles_audit
+    after insert or update or delete
+    on auth.users_roles
+    for each row
+execute procedure audit.audit_func();

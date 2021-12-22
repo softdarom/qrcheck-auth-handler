@@ -25,3 +25,11 @@ comment on column auth.user_token_info.id is 'A primary key of the table';
 comment on column auth.user_token_info.user_id is 'Reference on linked a user';
 comment on column auth.user_token_info.provider is 'An external oAuth service name';
 comment on column auth.user_token_info.sub is 'The sub. See https://openid.net/specs/openid-connect-core-1_0.html#IDToken';
+
+--changeset eekovtun:1.0.0/ddl/user_token_info_audit context:!local
+--rollback drop trigger user_token_info_audit on auth.user_token_info;
+create trigger user_token_info_audit
+    after insert or update or delete
+    on auth.user_token_info
+    for each row
+execute procedure audit.audit_func();

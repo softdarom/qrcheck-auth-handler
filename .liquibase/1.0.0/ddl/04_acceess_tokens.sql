@@ -33,3 +33,11 @@ comment on column auth.access_tokens.issued is 'Time of issuance an access token
 comment on column auth.access_tokens.expires is 'Time of the end an access token';
 comment on column auth.access_tokens.provider is 'An external oAuth service name';
 comment on column auth.access_tokens.active is 'A soft deleted flag: true - active, false - deleted';
+
+--changeset eekovtun:1.0.0/ddl/access_tokens_audit context:!local
+--rollback drop trigger access_tokens_audit on auth.access_tokens;
+create trigger access_tokens_audit
+    after insert or update or delete
+    on auth.access_tokens
+    for each row
+execute procedure audit.audit_func();

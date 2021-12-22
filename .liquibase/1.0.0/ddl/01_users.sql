@@ -25,3 +25,11 @@ comment on column auth.users.external_user_id is 'A user primary key of the user
 comment on column auth.users.created is 'Time of created';
 comment on column auth.users.updated is 'Time of the last updated';
 comment on column auth.users.active is 'A soft deleted flag: true - active, false - deleted';
+
+--changeset eekovtun:1.0.0/ddl/users_audit context:!local
+--rollback drop trigger users_audit on auth.users;
+create trigger users_audit
+    after insert or update or delete
+    on auth.users
+    for each row
+execute procedure audit.audit_func();
