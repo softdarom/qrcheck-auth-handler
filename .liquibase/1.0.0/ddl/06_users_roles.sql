@@ -21,6 +21,12 @@ create table auth.users_roles
 create unique index auth_roles_ids_fk_uniq
     on auth.users_roles (user_id, role_id);
 
+create trigger users_roles_audit
+    after insert or update or delete
+    on auth.users_roles
+    for each row
+execute procedure audit.audit_func();
+
 comment on table auth.users_roles is 'A table stores links auth and roles';
 comment on column auth.users_roles.id is 'A primary key of the table';
 comment on column auth.users_roles.user_id is 'Reference on a user id';

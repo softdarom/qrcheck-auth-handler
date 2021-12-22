@@ -16,6 +16,12 @@ create table auth.roles
 create unique index roles_name_uindex
     on auth.roles (name);
 
+create trigger roles_audit
+    after insert or update or delete
+    on auth.roles
+    for each row
+execute procedure audit.audit_func();
+
 comment on table auth.roles is 'A table stores inner roles the service';
 comment on column auth.roles.id is 'A primary key of the table';
 comment on column auth.roles.name is 'A role name';

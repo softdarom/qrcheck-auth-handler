@@ -22,6 +22,12 @@ create table auth.refresh_tokens
 create unique index refresh_tokens_token_provider_uniq
     on auth.refresh_tokens (token, provider);
 
+create trigger refresh_tokens_audit
+    after insert or update or delete
+    on auth.refresh_tokens
+    for each row
+execute procedure audit.audit_func();
+
 comment on table auth.refresh_tokens is 'A table stores refresh auth from external oAuth services such as Google, Facebook etc';
 comment on column auth.refresh_tokens.id is 'A primary key of the table';
 comment on column auth.refresh_tokens.user_id is 'Reference on linked a user';

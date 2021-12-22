@@ -20,6 +20,12 @@ create table auth.user_token_info
 create unique index user_token_info_user_id_provider_uniq
     on auth.user_token_info (user_id, provider);
 
+create trigger user_token_info_audit
+    after insert or update or delete
+    on auth.user_token_info
+    for each row
+execute procedure audit.audit_func();
+
 comment on table auth.user_token_info is 'A table stores additional information of user';
 comment on column auth.user_token_info.id is 'A primary key of the table';
 comment on column auth.user_token_info.user_id is 'Reference on linked a user';
