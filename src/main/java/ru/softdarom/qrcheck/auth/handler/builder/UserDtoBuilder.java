@@ -3,9 +3,9 @@ package ru.softdarom.qrcheck.auth.handler.builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RoleDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RoleDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.request.TokenUserInfoRequest;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 

@@ -22,7 +22,7 @@ import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.prov
 @DisplayName("UserHandlerClient Spring Integration Test")
 class UserHandlerClientTest extends AbstractIntegrationTest {
 
-    private static final String POST_SAVE_USER = "/inner/users";
+    private static final String POST_SAVE_USER = "/internal/users";
 
     @Autowired
     private WireMockServer wireUserHandlerServiceMock;

@@ -1,4 +1,4 @@
-package ru.softdarom.qrcheck.auth.handler.model.dto.inner;
+package ru.softdarom.qrcheck.auth.handler.model.dto.internal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

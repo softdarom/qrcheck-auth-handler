@@ -11,7 +11,7 @@ import ru.softdarom.qrcheck.auth.handler.dao.repository.UserRepository;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.mapper.impl.UserDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserDto;
 
 import java.util.Optional;
 import java.util.Set;

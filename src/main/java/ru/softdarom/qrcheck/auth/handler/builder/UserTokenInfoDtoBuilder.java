@@ -3,7 +3,7 @@ package ru.softdarom.qrcheck.auth.handler.builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserTokenInfoDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserTokenInfoDto;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
 @Slf4j(topic = "BUILDER")

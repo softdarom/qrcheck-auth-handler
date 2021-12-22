@@ -10,7 +10,7 @@ import ru.softdarom.qrcheck.auth.handler.dao.repository.RefreshTokenRepository;
 import ru.softdarom.qrcheck.auth.handler.mapper.impl.RefreshTokenDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 
 import java.util.Objects;
 import java.util.Set;

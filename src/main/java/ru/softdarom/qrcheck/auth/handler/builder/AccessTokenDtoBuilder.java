@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.AccessTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.AbstractOAuth2AccessTokenResponse;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 

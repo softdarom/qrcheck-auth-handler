@@ -1,6 +1,5 @@
 package ru.softdarom.qrcheck.auth.handler.dao.access;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,9 +12,9 @@ import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.AccessTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserTokenInfoDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserTokenInfoDto;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.util.Collection;

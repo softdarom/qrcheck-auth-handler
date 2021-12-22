@@ -14,7 +14,7 @@ import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.TokenValidType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
 
 import java.time.LocalDateTime;

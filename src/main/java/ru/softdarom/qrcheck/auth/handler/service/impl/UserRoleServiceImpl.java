@@ -7,7 +7,7 @@ import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.UserAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RoleDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RoleDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.UserRoleResponse;
 import ru.softdarom.qrcheck.auth.handler.service.UserRoleService;
 

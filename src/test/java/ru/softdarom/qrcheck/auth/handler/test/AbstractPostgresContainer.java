@@ -22,9 +22,9 @@ public abstract class AbstractPostgresContainer {
     private static final String DEFAULT_PASSWORD = "qrcheck";
 
     @ClassRule
-    private static final PostgreSQLContainer<?> POSTGRES_CONTAINER = postgreContainerConfigureAndStart();
+    private static final PostgreSQLContainer<?> POSTGRES_CONTAINER = postgresContainerConfigureAndStart();
 
-    private static PostgreSQLContainer<?> postgreContainerConfigureAndStart() {
+    private static PostgreSQLContainer<?> postgresContainerConfigureAndStart() {
         var postgreSQLContainer =
                 new PostgreSQLContainer<>(DockerImageName.parse(POSTGRES_IMAGE)
                         .asCompatibleSubstituteFor(COMPATIBLE_POSTGRES))
