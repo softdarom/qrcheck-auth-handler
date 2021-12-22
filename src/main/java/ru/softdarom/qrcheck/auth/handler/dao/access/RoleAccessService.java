@@ -1,6 +1,6 @@
 package ru.softdarom.qrcheck.auth.handler.dao.access;
 
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RoleDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RoleDto;
 
 import java.util.Set;
 

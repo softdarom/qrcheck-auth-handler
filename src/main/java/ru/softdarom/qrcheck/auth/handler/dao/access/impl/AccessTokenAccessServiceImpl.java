@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.dao.access.AccessTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.repository.AccessTokenRepository;
 import ru.softdarom.qrcheck.auth.handler.mapper.impl.AccessTokenDtoMapper;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.AccessTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
 
 import java.util.Optional;
 

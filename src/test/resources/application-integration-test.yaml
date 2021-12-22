@@ -63,7 +63,7 @@ outbound:
       host: "http://localhost:${outbound.feign.google-auth.port}/oauth2"
       port: 8100
     user-handler:
-      host: "http://localhost:${outbound.feign.user-handler.port}/inner"
+      host: "http://localhost:${outbound.feign.user-handler.port}/internal"
       port: 8200
 
 logbook:

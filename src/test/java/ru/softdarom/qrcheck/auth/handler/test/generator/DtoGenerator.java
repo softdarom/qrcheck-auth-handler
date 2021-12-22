@@ -5,7 +5,7 @@ import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderUserDto;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.*;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.*;
 import ru.softdarom.qrcheck.auth.handler.model.dto.request.TokenUserInfoRequest;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.*;
 

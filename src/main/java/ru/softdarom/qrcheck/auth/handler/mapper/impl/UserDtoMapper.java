@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.softdarom.qrcheck.auth.handler.dao.entity.UserEntity;
 import ru.softdarom.qrcheck.auth.handler.mapper.AbstractDtoMapper;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.UserDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserDto;
 
 import java.util.function.BiConsumer;
 

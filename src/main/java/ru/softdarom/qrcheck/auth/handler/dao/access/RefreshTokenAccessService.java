@@ -1,7 +1,7 @@
 package ru.softdarom.qrcheck.auth.handler.dao.access;
 
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.inner.RefreshTokenDto;
+import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 
 import java.util.Set;
 
