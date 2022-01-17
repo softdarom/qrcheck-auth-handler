@@ -12,6 +12,7 @@ import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,5 +48,13 @@ public class RefreshTokenAccessServiceImpl implements RefreshTokenAccessService 
         Assert.notNull(dto, "The 'dto' must not be null!");
         var entity = modelMapper.convertToSource(dto);
         return modelMapper.convertToDestination(refreshTokenRepository.save(entity));
+    }
+
+    @Override
+    @Transactional
+    public Set<RefreshTokenDto> save(Collection<RefreshTokenDto> dtos) {
+        Assert.notNull(dtos, "The 'dtos' must not be null!");
+        var entities = modelMapper.convertToSources(dtos);
+        return modelMapper.convertToDestinations(refreshTokenRepository.saveAll(entities));
     }
 }

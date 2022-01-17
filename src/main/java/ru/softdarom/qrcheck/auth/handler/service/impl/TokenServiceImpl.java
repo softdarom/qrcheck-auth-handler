@@ -15,10 +15,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.request.TokenUserInfoRequest;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.AbstractOAuth2TokenInfoResponse;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.RefreshTokenResponse;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.TokenUserInfoResponse;
-import ru.softdarom.qrcheck.auth.handler.service.TokenRefreshService;
-import ru.softdarom.qrcheck.auth.handler.service.TokenService;
-import ru.softdarom.qrcheck.auth.handler.service.TokenVerifyService;
-import ru.softdarom.qrcheck.auth.handler.service.UserHandlerService;
+import ru.softdarom.qrcheck.auth.handler.service.*;
 
 import java.util.Objects;
 import java.util.Set;
@@ -31,6 +28,7 @@ public class TokenServiceImpl implements TokenService {
     private final UserAccessService userAccessService;
     private final TokenVerifyService tokenVerifyService;
     private final TokenRefreshService tokenRefreshService;
+    private final TokenDisabledService tokenDisabledService;
     private final UserHandlerService userHandlerService;
 
     @Autowired
@@ -38,11 +36,13 @@ public class TokenServiceImpl implements TokenService {
                      UserAccessService userAccessService,
                      TokenVerifyService tokenVerifyService,
                      TokenRefreshService tokenRefreshService,
+                     TokenDisabledService tokenDisabledService,
                      UserHandlerService userHandlerService) {
         this.roleAccessService = roleAccessService;
         this.userAccessService = userAccessService;
         this.tokenVerifyService = tokenVerifyService;
         this.tokenRefreshService = tokenRefreshService;
+        this.tokenDisabledService = tokenDisabledService;
         this.userHandlerService = userHandlerService;
     }
 
@@ -83,8 +83,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private void disableOldTokens(Set<RefreshTokenDto> refreshTokens, ProviderType provider) {
-        tokenRefreshService.disableOldRefreshToken(refreshTokens, provider);
-        tokenRefreshService.disableOldAccessTokens(refreshTokens, provider);
+        tokenDisabledService.disableOldRefreshToken(refreshTokens, provider);
+        tokenDisabledService.disableOldAccessTokens(refreshTokens);
     }
 
     private void addTokenInfoIfNew(UserDto existedUser, Set<UserTokenInfoDto> newTokenInfo, ProviderType provider) {

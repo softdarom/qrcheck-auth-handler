@@ -78,47 +78,7 @@ class TokenRefreshServiceTest extends AbstractIntegrationTest {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock).find(any(), any());
             verify(oAuth2ProviderServiceMock).refreshToken(any(), any());
-            verify(refreshTokenAccessServiceMock).save(any());
             verify(accessTokenAccessServiceMock).save(any());
-        });
-    }
-
-    @ParameterizedTest
-    @EnumSource(ProviderType.class)
-    @DisplayName("disableOldAccessTokens(refreshTokens, provider): disables access tokens")
-    void successfulDisableOldAccessTokensSet(ProviderType provider) {
-        var accessToken = accessTokenDto(provider);
-        var refreshToken = refreshTokenDto(provider);
-        refreshToken.setAccessTokens(Set.of(accessToken));
-        var refreshTokens = Set.of(refreshToken);
-        assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldAccessTokens(refreshTokens, provider));
-            assertEquals(ActiveType.DISABLED, accessToken.getActive());
-        });
-    }
-
-    @ParameterizedTest
-    @EnumSource(ProviderType.class)
-    @DisplayName("disableOldAccessTokens(refreshToken, provider): disables access tokens")
-    void successfulDisableOldAccessTokens(ProviderType provider) {
-        var accessToken = accessTokenDto(provider);
-        var refreshToken = refreshTokenDto(provider);
-        refreshToken.setAccessTokens(Set.of(accessToken));
-        assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldAccessTokens(refreshToken, provider));
-            assertEquals(ActiveType.DISABLED, accessToken.getActive());
-        });
-    }
-
-    @ParameterizedTest
-    @EnumSource(ProviderType.class)
-    @DisplayName("disableOldRefreshToken(): disables refresh tokens")
-    void successfulDisableOldRefreshToken(ProviderType provider) {
-        var refreshToken = refreshTokenDto(provider);
-        var refreshTokens = Set.of(refreshToken);
-        assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldRefreshToken(refreshTokens, provider));
-            assertEquals(ActiveType.DISABLED, refreshToken.getActive());
         });
     }
 
@@ -150,7 +110,8 @@ class TokenRefreshServiceTest extends AbstractIntegrationTest {
     @DisplayName("refresh(): throws NotFoundException when an access token not found")
     void failureRefreshNotFoundAccessToken() {
         when(accessTokenAccessServiceMock.findByToken(any())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service.refresh(UUID.randomUUID().toString()));
+        var accessTokenAsString = UUID.randomUUID().toString();
+        assertThrows(NotFoundException.class, () -> service.refresh(accessTokenAsString));
         assertAll(() -> {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock, never()).find(any(), any());
@@ -171,37 +132,12 @@ class TokenRefreshServiceTest extends AbstractIntegrationTest {
                         .findAny();
         when(accessTokenAccessServiceMock.findByToken(any())).thenReturn(accessToken);
         when(refreshTokenAccessServiceMock.find(any(), any())).thenReturn(Set.of());
-        assertThrows(NotFoundException.class, () -> service.refresh(UUID.randomUUID().toString()));
+        var accessTokenAsString = UUID.randomUUID().toString();
+        assertThrows(NotFoundException.class, () -> service.refresh(accessTokenAsString));
         assertAll(() -> {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock).find(any(), any());
             verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
         });
-    }
-
-    @ParameterizedTest
-    @EnumSource(ProviderType.class)
-    @DisplayName("disableOldAccessTokens(refreshToken, provider): throws IllegalArgumentException when a refresh token is null")
-    void failureDisableOldAccessTokensNullRefreshToken(ProviderType provider) {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldAccessTokens((RefreshTokenDto) null, provider));
-    }
-
-    @Test
-    @DisplayName("disableOldAccessTokens(refreshToken, provider): throws IllegalArgumentException when a provider is null")
-    void failureDisableOldAccessTokensNullProvider() {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldAccessTokens(refreshTokenDto(ProviderType.QRCHECK), null));
-    }
-
-    @ParameterizedTest
-    @EnumSource(ProviderType.class)
-    @DisplayName("disableOldRefreshToken(): throws IllegalArgumentException when refresh tokens is null")
-    void failureDisableOldRefreshTokenNullRefreshTokens(ProviderType provider) {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldRefreshToken(null, provider));
-    }
-
-    @Test
-    @DisplayName("disableOldRefreshToken(): throws IllegalArgumentException when a provider is null")
-    void failureDisableOldRefreshTokenNullProvider() {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldRefreshToken(Set.of(refreshTokenDto(ProviderType.QRCHECK)), null));
     }
 }
