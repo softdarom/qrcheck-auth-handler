@@ -41,6 +41,9 @@ class TokenServiceTest extends AbstractIntegrationTest {
     private TokenRefreshService tokenRefreshServiceMock;
 
     @Mock
+    private TokenDisabledService tokenDisabledServiceMock;
+
+    @Mock
     private UserHandlerService userHandlerServiceMock;
 
     @Autowired
@@ -53,6 +56,7 @@ class TokenServiceTest extends AbstractIntegrationTest {
         ReflectionTestUtils.setField(service, "userAccessService", userAccessServiceMock);
         ReflectionTestUtils.setField(service, "tokenVerifyService", tokenVerifyServiceMock);
         ReflectionTestUtils.setField(service, "tokenRefreshService", tokenRefreshServiceMock);
+        ReflectionTestUtils.setField(service, "tokenDisabledService", tokenDisabledServiceMock);
         ReflectionTestUtils.setField(service, "userHandlerService", userHandlerServiceMock);
     }
 
@@ -62,6 +66,7 @@ class TokenServiceTest extends AbstractIntegrationTest {
                 userAccessServiceMock,
                 tokenVerifyServiceMock,
                 tokenRefreshServiceMock,
+                tokenDisabledServiceMock,
                 userHandlerServiceMock
         );
     }
@@ -82,8 +87,8 @@ class TokenServiceTest extends AbstractIntegrationTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenRefreshServiceMock, never()).disableOldRefreshToken(any(), any());
-            verify(tokenRefreshServiceMock, never()).disableOldAccessTokens(anySet(), any());
+            verify(tokenDisabledServiceMock, never()).disableOldRefreshToken(any(), any());
+            verify(tokenDisabledServiceMock, never()).disableOldAccessTokens(anySet());
         });
     }
 
@@ -101,8 +106,8 @@ class TokenServiceTest extends AbstractIntegrationTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenRefreshServiceMock).disableOldRefreshToken(any(), any());
-            verify(tokenRefreshServiceMock).disableOldAccessTokens(anySet(), any());
+            verify(tokenDisabledServiceMock).disableOldRefreshToken(any(), any());
+            verify(tokenDisabledServiceMock).disableOldAccessTokens(anySet());
         });
     }
 

@@ -13,6 +13,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RoleDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.AbstractOAuth2TokenInfoResponse;
 import ru.softdarom.qrcheck.auth.handler.service.OAuth2ProviderService;
+import ru.softdarom.qrcheck.auth.handler.service.TokenDisabledService;
 import ru.softdarom.qrcheck.auth.handler.service.TokenVerifyService;
 
 import java.time.LocalDateTime;
@@ -28,16 +29,19 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
     private final RefreshTokenAccessService refreshTokenAccessService;
     private final RoleAccessService roleAccessService;
     private final OAuth2ProviderService oAuth2ProviderService;
+    private final TokenDisabledService tokenDisabledService;
 
     @Autowired
     TokenVerifyServiceImpl(AccessTokenAccessService accessTokenAccessService,
                            RefreshTokenAccessService refreshTokenAccessService,
                            RoleAccessService roleAccessService,
-                           OAuth2ProviderService oAuth2ProviderService) {
+                           OAuth2ProviderService oAuth2ProviderService,
+                           TokenDisabledService tokenDisabledService) {
         this.accessTokenAccessService = accessTokenAccessService;
         this.refreshTokenAccessService = refreshTokenAccessService;
         this.roleAccessService = roleAccessService;
         this.oAuth2ProviderService = oAuth2ProviderService;
+        this.tokenDisabledService = tokenDisabledService;
     }
 
     @Override
@@ -66,6 +70,7 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
             return tokenInfo;
         } else {
             LOGGER.info("A token is not valid.");
+            tokenDisabledService.disableAccessToken(foundAccessToken);
             return AbstractOAuth2TokenInfoResponse.expiredToken();
         }
     }
