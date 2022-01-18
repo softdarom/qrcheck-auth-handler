@@ -8,4 +8,4 @@
 
     - name: Load or Update configurations to Minikube
       role: uploader_minikube
-      when: env == 'local'
+      when: minikube == 'yes'
