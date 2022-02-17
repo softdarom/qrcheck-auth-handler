@@ -19,6 +19,9 @@ spring:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
+      driver-class-name: org.postgresql.Driver
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
       pool-name: HikariPool
       max-lifetime: 600000
       connection-timeout: 15000
@@ -27,9 +30,16 @@ spring:
       minimum-idle: 2
       schema: auth
   liquibase:
-    change-log: file:.liquibase/changelog.yaml
+    change-log: liquibase/changelog.yaml
     contexts: local
     enabled: true
+  sleuth:
+    jdbc:
+      p6spy:
+        enabled: true
+        enable-logging: true
+        tracing:
+          include-parameter-values: true
   groovy:
     template:
       check-template-location: false

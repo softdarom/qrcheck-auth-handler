@@ -19,6 +19,10 @@ spring:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: {{ liquibase.url }}
+      username: {{ spring.datasource.username }}
+      password: "${DATABASE_PASSWORD}"
       pool-name: {{ spring.datasource.hikari.pool_name | default('HikariPool') }}
       max-lifetime: {{ spring.datasource.hikari.max_lifetime | default(600000) }}
       connection-timeout: {{ spring.datasource.hikari.connection_timeout | default(15000) }}
@@ -31,6 +35,13 @@ spring:
   groovy:
     template:
       check-template-location: false
+  sleuth:
+      jdbc:
+        p6spy:
+          enabled: {{ spring.sleuth.jdbc.p6spy.enabled | default('true') | lower }}
+          enable-logging: {{ spring.sleuth.jdbc.p6spy.enable_logging | default('true') | lower }}
+          tracing:
+            include-parameter-values: {{ spring.sleuth.jdbc.p6spy.tracing.include_parameter_values | default('true') | lower }}
   security:
     qrcheck:
       api-key:

@@ -54,3 +54,4 @@ appender("LOGSTASH", RollingFileAppender) {
 }
 
 root(INFO, ["CONSOLE", "LOGSTASH"])
+logger("org.springframework.cloud.sleuth.instrument.jdbc.TraceListenerStrategy", WARN, ["CONSOLE", "LOGSTASH"])
