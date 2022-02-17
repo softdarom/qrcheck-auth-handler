@@ -53,6 +53,7 @@ dependencies {
     api "org.springframework.cloud:spring-cloud-starter-kubernetes-client-config"
     api "org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE"
 
+    api "ru.softdarom.security:qrcheck-security-starter:1.2.0"
     api "javax.validation:validation-api:2.0.1.Final"
     api "io.micrometer:micrometer-registry-prometheus:1.8.2"
     api "org.zalando:logbook-spring-boot-starter:2.14.0"
