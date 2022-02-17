@@ -11,7 +11,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = AbstractPostgresContainer.PostgreDataSourceInitializer.class)
+@ContextConfiguration(initializers = AbstractPostgresContainer.PostgresDataSourceInitializer.class)
 @Slf4j(topic = "TEST")
 public abstract class AbstractPostgresContainer {
 
@@ -25,22 +25,37 @@ public abstract class AbstractPostgresContainer {
     private static final PostgreSQLContainer<?> POSTGRES_CONTAINER = postgresContainerConfigureAndStart();
 
     private static PostgreSQLContainer<?> postgresContainerConfigureAndStart() {
-        var postgreSQLContainer =
+        var postgresContainer =
                 new PostgreSQLContainer<>(DockerImageName.parse(POSTGRES_IMAGE)
                         .asCompatibleSubstituteFor(COMPATIBLE_POSTGRES))
                         .withDatabaseName(DEFAULT_DATABASE)
                         .withUsername(DEFAULT_USERNAME)
                         .withPassword(DEFAULT_PASSWORD);
 
-        postgreSQLContainer.start();
+        postgresContainer.start();
         LOGGER.info("Postgres started");
-        LOGGER.info("Database url is: {}", postgreSQLContainer.getJdbcUrl());
-        LOGGER.info("Database username is: {}", postgreSQLContainer.getUsername());
-        LOGGER.info("Database password is: {}", postgreSQLContainer.getPassword());
-        return postgreSQLContainer;
+        LOGGER.info("Database url is: {}", postgresContainer.getJdbcUrl());
+        LOGGER.info("Database username is: {}", postgresContainer.getUsername());
+        LOGGER.info("Database password is: {}", postgresContainer.getPassword());
+        return postgresContainer;
     }
 
-    static class PostgreDataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    static class PostgresDataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext applicationContext) {
+            setupProperties(applicationContext);
+        }
+
+        private void setupProperties(ConfigurableApplicationContext applicationContext) {
+            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
+                    applicationContext,
+                    "spring.datasource.url=" + configureSpyUrl(),
+                    "spring.datasource.username=" + AbstractPostgresContainer.POSTGRES_CONTAINER.getUsername(),
+                    "spring.datasource.password=" + AbstractPostgresContainer.POSTGRES_CONTAINER.getPassword(),
+                    "spring.datasource.hikari.jdbc-url=" + AbstractPostgresContainer.POSTGRES_CONTAINER.getJdbcUrl()
+            );
+        }
 
         /**
          * Configuration for spy logging of database
@@ -56,20 +71,5 @@ public abstract class AbstractPostgresContainer {
                     + "/"
                     + AbstractPostgresContainer.POSTGRES_CONTAINER.getDatabaseName();
         }
-
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            setupProperties(applicationContext);
-        }
-
-        private void setupProperties(ConfigurableApplicationContext applicationContext) {
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    "spring.datasource.url=" + configureSpyUrl(),
-                    "spring.datasource.username=" + AbstractPostgresContainer.POSTGRES_CONTAINER.getUsername(),
-                    "spring.datasource.password=" + AbstractPostgresContainer.POSTGRES_CONTAINER.getPassword()
-            );
-        }
     }
-
 }

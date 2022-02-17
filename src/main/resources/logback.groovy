@@ -12,3 +12,4 @@ appender("CONSOLE", ConsoleAppender) {
 }
 
 root(INFO, ["CONSOLE"])
+logger("org.springframework.cloud.sleuth.instrument.jdbc.TraceListenerStrategy", WARN, ["CONSOLE"])

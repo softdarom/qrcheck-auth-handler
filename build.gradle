@@ -1,12 +1,14 @@
 plugins {
-    id "org.springframework.boot" version "2.4.5"
+    id "org.springframework.boot" version "2.6.1"
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
     id "java-library"
     id "jacoco"
-    id "org.liquibase.gradle" version "2.0.4"
+    id "org.liquibase.gradle" version "2.1.1"
 }
 
 group = "ru.softdarom.qrcheck.auth.handler"
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 bootJar {
     archiveFileName = "auth-handler.jar"
@@ -34,30 +36,9 @@ repositories {
     mavenLocal()
 }
 
-ext {
-    set("springCloudVersion", "2020.0.1")
-    set("springSecurityAuthVersion", "2.5.1.RELEASE")
-    set("micrometerVersion", "1.5.4")
-    set("logbookVersion", "2.6.2")
-    set("p6spyVersion", "3.9.0")
-    set("modelMapperVersion", "2.4.4")
-    set("groovyVersion", "3.0.7")
-    set("liquibaseCoreVersion", "3.10.3")
-    set("liquibaseDslVersion", "3.0.1")
-    set("swaggerVersion", "1.5.9")
-    set("logbackVersion", "1.2.3")
-    set("logstashVersion", "5.2")
-    set("qrcheckSecurityStarterVersion", "1.2.0")
-    set("postgresVersion", "42.2.5")
-    set("snakeyamlVersion", "1.29")
-    set("junitVersion", "5.4.2")
-    set("wiremockVersion", "2.27.2")
-    set("testcontainerVersion", "1.15.2")
-}
-
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.0"
     }
 }
 
@@ -70,19 +51,24 @@ dependencies {
     api "org.springframework.cloud:spring-cloud-starter-sleuth"
     api "org.springframework.cloud:spring-cloud-starter-openfeign"
     api "org.springframework.cloud:spring-cloud-starter-kubernetes-client-config"
-    api "org.springframework.security.oauth:spring-security-oauth2:${springSecurityAuthVersion}"
+    api "org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE"
 
-    api "io.micrometer:micrometer-registry-prometheus:${micrometerVersion}"
-    api "org.zalando:logbook-spring-boot-starter:${logbookVersion}"
-    api "p6spy:p6spy:${p6spyVersion}"
-    api "org.modelmapper:modelmapper:${modelMapperVersion}"
-    api "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
-    api "org.springdoc:springdoc-openapi-ui:${swaggerVersion}"
-    api "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
-    api "ru.softdarom.security:qrcheck-security-starter:${qrcheckSecurityStarterVersion}"
+    api "ru.softdarom.security:qrcheck-security-starter:1.2.0"
+    api "javax.validation:validation-api:2.0.1.Final"
+    api "io.micrometer:micrometer-registry-prometheus:1.8.2"
+    api "org.zalando:logbook-spring-boot-starter:2.14.0"
+    api "p6spy:p6spy:3.9.1"
+    api "org.modelmapper:modelmapper:2.4.5"
+    api "org.springdoc:springdoc-openapi-ui:1.6.4"
+    api "net.logstash.logback:logstash-logback-encoder:7.0.1"
+    api "net.minidev:json-smart:2.4.7"
+    api "com.zaxxer:HikariCP:5.0.1"
+    api "net.ttddyy:datasource-proxy:1.7"
+    api "org.liquibase:liquibase-core:4.6.0"
 
-    runtimeOnly "org.codehaus.groovy:groovy-all:${groovyVersion}"
-    runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
+    runtimeOnly "org.postgresql:postgresql:42.3.1"
+    runtimeOnly "org.codehaus.groovy:groovy:3.0.9"
+    runtimeOnly "org.codehaus.groovy:groovy-json:3.0.9"
 
     compileOnly "org.projectlombok:lombok"
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
@@ -92,16 +78,16 @@ dependencies {
 
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
-    liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
-    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:${liquibaseDslVersion}"
-    liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
-    liquibaseRuntime "org.postgresql:postgresql:${postgresVersion}"
-    liquibaseRuntime "org.yaml:snakeyaml:${snakeyamlVersion}"
+    liquibaseRuntime "org.liquibase:liquibase-core:3.10.3"
+    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:3.0.2"
+    liquibaseRuntime "ch.qos.logback:logback-classic:1.2.10"
+    liquibaseRuntime "org.postgresql:postgresql:42.3.1"
+    liquibaseRuntime "org.yaml:snakeyaml:1.29"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
-    testImplementation "com.github.tomakehurst:wiremock:${wiremockVersion}"
-    testImplementation "org.testcontainers:postgresql:${testcontainerVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.2"
+    testImplementation "com.github.tomakehurst:wiremock:2.27.2"
+    testImplementation "org.testcontainers:postgresql:1.15.2"
 }
 
 jacocoTestReport {
@@ -133,17 +119,18 @@ test {
 }
 
 liquibase {
+    def propertiesPath = System.getenv("LIQUIBASE_PROPERTIES_PATH") ?: ".deploy/ansible/configs/liquibase/liquibase.properties"
     def properties = new Properties()
-    def propertyFile = file(".deploy/ansible/configs/liquibase/liquibase.properties")
+    def propertyFile = file("${propertiesPath}")
 
     if (propertyFile.exists()) {
         propertyFile.withInputStream { properties.load(it) }
     }
 
+    var resourceDir = sourceSets.main.resources.srcDirs.first().absolutePath
     activities {
         main {
-            changeLogFile properties.getOrDefault("changeLogFile", "${projectDir}/.liquibase/changelog.yaml")
-            outputFile "${buildDir}/liquibase/sql-migration.sql"
+            changeLogFile properties.getOrDefault("changeLogFile", "${resourceDir}/liquibase/changelog.yaml")
             url properties.getOrDefault("url", "jdbc:postgresql://localhost:5432/qrcheck")
             defaultSchemaName properties.getOrDefault("schema", "auth")
             username properties.getOrDefault("username", "liquibase")
@@ -152,3 +139,17 @@ liquibase {
         }
     }
 }
+
+task liquibaseChangelogArchive(type: Zip) {
+    from "$buildDir/resources/main/liquibase/"
+    archiveName "liquibase.zip"
+    destinationDirectory.set(file("$buildDir"))
+}
+
+task deployConfigsArchive(type: Zip) {
+    from ".deploy/"
+    archiveName "deploy.zip"
+    destinationDirectory.set(file("$buildDir"))
+}
+
+tasks.getByName("assemble").finalizedBy("liquibaseChangelogArchive", "deployConfigsArchive")
