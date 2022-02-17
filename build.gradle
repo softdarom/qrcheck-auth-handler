@@ -10,6 +10,10 @@ group = "ru.softdarom.qrcheck.auth.handler"
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
+jar {
+    enabled = false
+}
+
 bootJar {
     archiveFileName = "auth-handler.jar"
 }
