@@ -66,7 +66,7 @@ public class TokenVerifyServiceImpl implements TokenVerifyService {
         if (notExpired && accessTokenActive && refreshTokenActive) {
             var tokenInfo = oAuth2ProviderService.getTokenInfo(accessToken, foundAccessToken.getProvider());
             tokenInfo.addScopes(getRoles(foundAccessToken));
-            tokenInfo.setUserId(foundAccessToken.getRefreshToken().getUser().getId());
+            tokenInfo.setUserId(foundAccessToken.getRefreshToken().getUser().getExternalUserId());
             return tokenInfo;
         } else {
             LOGGER.info("A token is not valid.");
