@@ -28,7 +28,7 @@ spring:
       maximum-pool-size: 10
       idle-timeout: 200000
       minimum-idle: 2
-      schema: auth
+      schema: ${spring.jpa.properties.hibernate.default_schema}
   liquibase:
     change-log: liquibase/changelog.yaml
     contexts: local
@@ -43,15 +43,6 @@ spring:
   groovy:
     template:
       check-template-location: false
-  security:
-    qrcheck:
-      api-key:
-        hasApiKeyAuth: true
-        token:
-          outgoing: 89414993-6e9f-45e6-a0ec-9eb5b7cbb2fe,fc28c7e5-fb14-4335-9aa1-e0921cfdd4b9,3f877c2e-c378-46c9-9737-7aed66aed8d5
-          incoming: d88d2dab-4002-4d7c-b259-d9682df4f22b
-      oauth2:
-        enabled: false
 
 springdoc:
   api-docs:

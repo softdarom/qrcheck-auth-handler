@@ -14,7 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.client.GoogleAuthClient;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Map;
 import java.util.UUID;
@@ -25,8 +25,9 @@ import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleAccessTokenResponse;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleTokenInfoResponse;
 
+@SpringIntegrationTest
 @DisplayName("OAuth2ProviderService Spring Integration Test")
-class OAuth2ProviderServiceTest extends AbstractIntegrationTest {
+class OAuth2ProviderServiceTest {
 
     @Mock
     private GoogleAuthClient googleAuthClientMock;
@@ -75,7 +76,8 @@ class OAuth2ProviderServiceTest extends AbstractIntegrationTest {
     @EnumSource(value = ProviderType.class, names = "GOOGLE", mode = EnumSource.Mode.EXCLUDE)
     @DisplayName("getTokenInfo(): throws NotFoundException when not existed client")
     void failureGetTokenInfoNotExistedClient(ProviderType provider) {
-        assertThrows(NotFoundException.class, () -> service.getTokenInfo(UUID.randomUUID().toString(), provider));
+        var accessToken = UUID.randomUUID().toString();
+        assertThrows(NotFoundException.class, () -> service.getTokenInfo(accessToken, provider));
         verify(googleAuthClientMock, never()).tokenInfo(any());
     }
 
@@ -83,7 +85,8 @@ class OAuth2ProviderServiceTest extends AbstractIntegrationTest {
     @EnumSource(value = ProviderType.class, names = "GOOGLE", mode = EnumSource.Mode.EXCLUDE)
     @DisplayName("refreshToken(): throws NotFoundException when not existed client")
     void failureRefreshTokenNotExistedClient(ProviderType provider) {
-        assertThrows(NotFoundException.class, () -> service.refreshToken(UUID.randomUUID().toString(), provider));
+        var refreshToken = UUID.randomUUID().toString();
+        assertThrows(NotFoundException.class, () -> service.refreshToken(refreshToken, provider));
         verify(googleAuthClientMock, never()).refresh(any());
     }
 }

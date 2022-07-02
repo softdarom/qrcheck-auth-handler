@@ -11,24 +11,13 @@ import java.util.Set;
 
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
-    Optional<RoleEntity> findByName(RoleType roleType);
+    @Query("select r from RoleEntity r where r.name = :name")
+    Optional<RoleEntity> findByName(@Param("name") RoleType name);
 
-    @Query(
-            value = "select r.id, r.name from roles r " +
-                    "inner join users_roles ur on r.id = ur.role_id " +
-                    "where ur.user_id = :userId",
-            nativeQuery = true
-    )
-    Set<RoleEntity> findAllByUserId(@Param("userId") Long userId);
+    @Query("select r from RoleEntity r inner join r.users users where users.id = :id")
+    Set<RoleEntity> findAllByUserId(@Param("id") Long id);
 
-    @Query(
-            value = "select r.id, r.name " +
-                    "from roles r " +
-                    "         inner join users_roles ur on r.id = ur.role_id " +
-                    "         inner join users u on ur.user_id = u.id " +
-                    "where u.external_user_id = :externalUserId",
-            nativeQuery = true
-    )
+    @Query("select r from RoleEntity r inner join r.users users where users.externalUserId = :externalUserId")
     Set<RoleEntity> findAllByExternalUserId(@Param("externalUserId") Long externalUserId);
 
 }

@@ -50,6 +50,7 @@ public class UserAccessServiceImpl implements UserAccessService {
     @Override
     public UserDto changeRole(Long externalUserId, RoleType role) {
         Assert.notNull(externalUserId, "The 'externalUserId' must not be null!");
+        Assert.notNull(role, "The 'role' must not be null!");
         var newRole = roleRepository.findByName(role).orElseThrow(() -> new NotFoundException("Role not found by " + role));
         var user = userRepository.findByExternalUserId(externalUserId)
                 .orElseThrow(() -> new NotFoundException("User not found by external id " + externalUserId));

@@ -15,7 +15,7 @@ import ru.softdarom.qrcheck.auth.handler.dao.access.RefreshTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Collection;
 import java.util.Set;
@@ -25,8 +25,9 @@ import static org.mockito.Mockito.reset;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.accessTokenDto;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.refreshTokenDto;
 
+@SpringIntegrationTest
 @DisplayName("TokenDisabledService Spring Integration Test")
-class TokenDisabledServiceTest extends AbstractIntegrationTest {
+class TokenDisabledServiceTest {
 
     @Mock
     private AccessTokenAccessService accessTokenAccessServiceMock;

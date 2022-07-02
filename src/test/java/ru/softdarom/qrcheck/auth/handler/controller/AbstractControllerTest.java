@@ -7,8 +7,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
-import ru.softdarom.security.oauth2.config.property.ApiKeyProperties;
+import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
 
 import java.util.function.BiConsumer;
 
@@ -17,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateString;
 import static ru.softdarom.qrcheck.auth.handler.test.helper.UriHelper.generateUri;
 
-abstract class AbstractControllerTest extends AbstractIntegrationTest {
+abstract class AbstractControllerTest {
+
+    protected static final String DEFAULT_INCOMING_API_KEY = "7c1ac776-0532-4be2-9f29-f637da759421";
 
     @LocalServerPort
     protected int port;
@@ -50,6 +51,10 @@ abstract class AbstractControllerTest extends AbstractIntegrationTest {
         return exchange(request, HttpMethod.POST, headers, path);
     }
 
+    protected <T, R> ResponseEntity<T> delete(R request, HttpHeaders headers, String path) {
+        return exchange(request, HttpMethod.DELETE, headers, path);
+    }
+
     protected <T, R> ResponseEntity<T> exchange(R request, HttpMethod method, HttpHeaders headers, String path) {
         var uri = generateUri(path, port);
         return restTemplate.exchange(uri, method, new HttpEntity<>(request, headers), new ParameterizedTypeReference<>() {
@@ -74,7 +79,7 @@ abstract class AbstractControllerTest extends AbstractIntegrationTest {
     protected HttpHeaders buildApiKeyHeader() {
         var headers = new HttpHeaders();
         headers.set("X-Application-Version", generateString());
-        headers.set(apiKeyProperties.getHeaderName(), apiKeyProperties.getToken().getIncoming().stream().findAny().orElseThrow());
+        headers.set(apiKeyProperties.getHeaderName(), DEFAULT_INCOMING_API_KEY);
         return headers;
     }
 

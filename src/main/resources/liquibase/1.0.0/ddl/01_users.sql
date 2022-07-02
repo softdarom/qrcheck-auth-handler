@@ -9,14 +9,14 @@ create sequence auth.user_seq;
 create table auth.users
 (
     id               bigint       default nextval('auth.user_seq') not null
-        constraint auth_pk primary key,
+        constraint user_pk primary key,
     external_user_id bigint                                        not null,
     created          timestamp(0) default now()                    not null,
     updated          timestamp(0) default now()                    not null,
     active           boolean      default true
 );
 
-create unique index users_external_user_id_uindex
+create unique index users_external_user_id_uniq
     on auth.users (external_user_id);
 
 comment on table auth.users is 'A table stores auth of auth';

@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.UserAccessService;
-import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Set;
 
@@ -26,8 +25,9 @@ import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.g
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.roleDto;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userDto;
 
+@SpringIntegrationTest
 @DisplayName("UserRoleService Spring Integration Test")
-class UserRoleServiceTest extends AbstractIntegrationTest {
+class UserRoleServiceTest {
 
     @Mock
     private RoleAccessService roleAccessServiceMock;
@@ -98,7 +98,8 @@ class UserRoleServiceTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("getRoles(): throws IllegalArgumentException when a role is null")
     void changeRoleNullRole() {
-        assertThrows(IllegalArgumentException.class, () -> service.changeRole(generateLong(), null));
+        var userId = generateLong();
+        assertThrows(IllegalArgumentException.class, () -> service.changeRole(userId, null));
         verify(roleAccessServiceMock, never()).findByUserId(any());
     }
 }

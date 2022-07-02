@@ -15,6 +15,7 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.response.ErrorResponse;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.GoogleTokenInfoResponse;
 import ru.softdarom.qrcheck.auth.handler.rest.controller.TokenController;
 import ru.softdarom.qrcheck.auth.handler.service.TokenService;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
 
+@SpringIntegrationTest
 @DisplayName("TokenController Spring Integration Test")
 class TokenControllerTest extends AbstractControllerTest {
 

@@ -1,11 +1,14 @@
 package ru.softdarom.qrcheck.auth.handler.test.generator;
 
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
+import ru.softdarom.qrcheck.auth.handler.model.base.ApiKeyType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.ProviderUserDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.*;
+import ru.softdarom.qrcheck.auth.handler.model.dto.request.IncomingApiKeyRequest;
+import ru.softdarom.qrcheck.auth.handler.model.dto.request.OutgoingApiKeyRequest;
 import ru.softdarom.qrcheck.auth.handler.model.dto.request.TokenUserInfoRequest;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.*;
 
@@ -67,8 +70,8 @@ public final class DtoGenerator {
                 .externalUserId(generateLong())
                 .active(ActiveType.ENABLED)
                 .refreshTokens(refreshTokens)
-                .tokenInfo(Set.of(userTokenInfo))
-                .roles(Set.of(role))
+                .tokenInfo(new HashSet<>(Set.of(userTokenInfo)))
+                .roles(new HashSet<>(Set.of(role)))
                 .build();
         refreshToken.setUser(user);
         userTokenInfo.setUser(user);
@@ -151,5 +154,72 @@ public final class DtoGenerator {
 
     public static UserRoleResponse userRoleResponse() {
         return new UserRoleResponse(generateLong(), Set.of(RoleType.USER));
+    }
+
+    public static ApiKeyDto apiKeyDto() {
+        return ApiKeyDto.builder()
+                .key(UUID.randomUUID())
+                .type(ApiKeyType.INCOMING)
+                .build();
+    }
+
+    public static ApiKeyDto apiKeyDto(ApiKeyType type) {
+        return ApiKeyDto.builder()
+                .key(UUID.randomUUID())
+                .type(type)
+                .build();
+    }
+
+    public static ApiKeyDto apiKeyDto(Long id) {
+        return ApiKeyDto.builder()
+                .key(UUID.randomUUID())
+                .id(id)
+                .type(ApiKeyType.INCOMING)
+                .build();
+    }
+
+    public static MicroserviceDto microserviceDto() {
+        return MicroserviceDto.builder()
+                .name(generateString())
+                .build();
+    }
+
+    public static MicroserviceDto microserviceDto(String serviceName) {
+        return microserviceDto(serviceName, Set.of(apiKeyDto()));
+    }
+
+    public static MicroserviceDto microserviceDto(String serviceName, Set<ApiKeyDto> apiKeys) {
+        return MicroserviceDto.builder()
+                .name(serviceName)
+                .apiKeys(apiKeys)
+                .build();
+    }
+
+    public static IncomingApiKeyRequest incomingApiKeyRequest() {
+        return new IncomingApiKeyRequest(
+                generateString(),
+                Set.of(UUID.randomUUID())
+        );
+    }
+
+    public static OutgoingApiKeyRequest outgoingApiKeyRequest() {
+        return new OutgoingApiKeyRequest(
+                generateString(),
+                UUID.randomUUID()
+        );
+    }
+
+    public static IncomingApiKeyResponse incomingApiKeyResponse() {
+        return new IncomingApiKeyResponse(
+                generateString(),
+                Set.of(UUID.randomUUID())
+        );
+    }
+
+    public static OutgoingApiKeyResponse outgoingApiKeyResponse() {
+        return new OutgoingApiKeyResponse(
+                generateString(),
+                UUID.randomUUID()
+        );
     }
 }

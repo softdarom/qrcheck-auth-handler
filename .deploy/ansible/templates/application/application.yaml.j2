@@ -42,15 +42,6 @@ spring:
           enable-logging: {{ spring.sleuth.jdbc.p6spy.enable_logging | default('true') | lower }}
           tracing:
             include-parameter-values: {{ spring.sleuth.jdbc.p6spy.tracing.include_parameter_values | default('true') | lower }}
-  security:
-    qrcheck:
-      api-key:
-        hasApiKeyAuth: true
-        token:
-          outgoing: ${API_KEY_OUTGOING}
-          incoming: ${API_KEY_INCOMING}
-      oauth2:
-        enabled: false
 
 springdoc:
   api-docs:

@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(
         name = "roles",
-        indexes = @Index(name = "roles_name_uindex", columnList = "name", unique = true)
+        indexes = @Index(name = "roles_name_uniq", columnList = "name", unique = true)
 )
 public class RoleEntity {
 
