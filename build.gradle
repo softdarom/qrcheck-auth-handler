@@ -57,7 +57,6 @@ dependencies {
     api "org.springframework.cloud:spring-cloud-starter-kubernetes-client-config"
     api "org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE"
 
-    api "ru.softdarom.security:qrcheck-security-starter:1.2.0"
     api "javax.validation:validation-api:2.0.1.Final"
     api "io.micrometer:micrometer-registry-prometheus:1.8.2"
     api "org.zalando:logbook-spring-boot-starter:2.14.0"
@@ -70,7 +69,7 @@ dependencies {
     api "net.ttddyy:datasource-proxy:1.7"
     api "org.liquibase:liquibase-core:4.6.0"
 
-    runtimeOnly "org.postgresql:postgresql:42.3.1"
+    runtimeOnly "org.postgresql:postgresql:42.3.3"
     runtimeOnly "org.codehaus.groovy:groovy:3.0.9"
     runtimeOnly "org.codehaus.groovy:groovy-json:3.0.9"
 
@@ -85,7 +84,7 @@ dependencies {
     liquibaseRuntime "org.liquibase:liquibase-core:3.10.3"
     liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:3.0.2"
     liquibaseRuntime "ch.qos.logback:logback-classic:1.2.10"
-    liquibaseRuntime "org.postgresql:postgresql:42.3.1"
+    liquibaseRuntime "org.postgresql:postgresql:42.3.3"
     liquibaseRuntime "org.yaml:snakeyaml:1.29"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"

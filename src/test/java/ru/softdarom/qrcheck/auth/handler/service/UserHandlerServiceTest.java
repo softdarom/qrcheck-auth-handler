@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.client.UserHandlerClient;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.providerUserDto;
 
+@SpringIntegrationTest
 @DisplayName("UserHandlerService Spring Integration Test")
-class UserHandlerServiceTest extends AbstractIntegrationTest {
+class UserHandlerServiceTest {
 
     @Mock
     private UserHandlerClient userHandlerClientMock;

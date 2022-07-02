@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(
         name = "users",
         indexes = {
-                @Index(name = "users_external_user_id_uindex", columnList = "external_user_id", unique = true)
+                @Index(name = "users_external_user_id_uniq", columnList = "external_user_id", unique = true)
         }
 )
 @SQLDelete(sql = "UPDATE users SET active = false, updated = current_timestamp WHERE id = ?", check = ResultCheckStyle.COUNT)

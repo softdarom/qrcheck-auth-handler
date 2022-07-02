@@ -7,18 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import ru.softdarom.qrcheck.auth.handler.dao.entity.UserEntity;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
 
+@SpringIntegrationTest
 @Sql(scripts = "classpath:sql/repository/UserRepository/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:sql/repository/UserRepository/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:sql/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
 @DisplayName("UserRepository Spring Integration Test")
-class UserRepositoryTest extends AbstractIntegrationTest {
-
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository repository;

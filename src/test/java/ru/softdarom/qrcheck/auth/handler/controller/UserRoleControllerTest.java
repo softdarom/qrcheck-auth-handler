@@ -15,6 +15,7 @@ import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.ErrorResponse;
 import ru.softdarom.qrcheck.auth.handler.rest.controller.UserRoleController;
 import ru.softdarom.qrcheck.auth.handler.service.UserRoleService;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userRoleResponse;
 
+@SpringIntegrationTest
 @DisplayName("UserRoleController Spring Integration Test")
 class UserRoleControllerTest extends AbstractControllerTest {
 

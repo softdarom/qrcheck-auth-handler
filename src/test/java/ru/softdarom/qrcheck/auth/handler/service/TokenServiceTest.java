@@ -13,10 +13,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RoleAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.UserAccessService;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +24,9 @@ import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateLong;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
 
+@SpringIntegrationTest
 @DisplayName("TokenService Spring Integration Test")
-class TokenServiceTest extends AbstractIntegrationTest {
+class TokenServiceTest {
 
     @Mock
     private RoleAccessService roleAccessServiceMock;
@@ -100,6 +100,25 @@ class TokenServiceTest extends AbstractIntegrationTest {
         when(roleAccessServiceMock.defaultRole()).thenReturn(roleDto());
         when(userAccessServiceMock.findByExternalUserId(any())).thenReturn(Optional.of(userDto(provider)));
         var actual = assertDoesNotThrow(() -> service.saveOAuth2TokenInfo(tokenUserInfoRequest(provider)));
+        assertAll(() -> {
+            assertNotNull(actual);
+            verify(userHandlerServiceMock).saveUser(any());
+            verify(roleAccessServiceMock).defaultRole();
+            verify(userAccessServiceMock).findByExternalUserId(any());
+            verify(userAccessServiceMock).save(any());
+            verify(tokenDisabledServiceMock).disableOldRefreshToken(any(), any());
+            verify(tokenDisabledServiceMock).disableOldAccessTokens(anySet());
+        });
+    }
+
+    @Test
+    @DisplayName("saveOAuth2TokenInfo(): returns TokenUserInfoResponse when a new user and a new token provider")
+    void successfulSaveOAuth2TokenInfoExistedUserNewTokenProvider() {
+        when(userHandlerServiceMock.saveUser(any())).thenReturn(Optional.of(generateLong()));
+        when(roleAccessServiceMock.defaultRole()).thenReturn(roleDto());
+        when(userAccessServiceMock.findByExternalUserId(any())).thenReturn(Optional.of(userDto(ProviderType.GOOGLE)));
+        var tokenRequest = tokenUserInfoRequest(ProviderType.VKONTAKTE);
+        var actual = assertDoesNotThrow(() -> service.saveOAuth2TokenInfo(tokenRequest));
         assertAll(() -> {
             assertNotNull(actual);
             verify(userHandlerServiceMock).saveUser(any());

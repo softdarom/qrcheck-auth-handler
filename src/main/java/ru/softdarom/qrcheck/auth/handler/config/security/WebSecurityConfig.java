@@ -19,9 +19,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    WebSecurityConfig(@Qualifier("qrCheckApiKeyAuthorizationFilter") AbstractPreAuthenticatedProcessingFilter apiKeyAuthorizationFilter,
-                      @Qualifier("qrCheckAuthenticationProvider") AuthenticationProvider authenticationProvider,
-                      @Qualifier("qrCheckAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint) {
+    WebSecurityConfig(@Qualifier("defaultApiKeyAuthorizationConfig") AbstractPreAuthenticatedProcessingFilter apiKeyAuthorizationFilter,
+                      @Qualifier("defaultAuthenticationProvider") AuthenticationProvider authenticationProvider,
+                      @Qualifier("defaultAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint) {
         this.apiKeyAuthorizationFilter = apiKeyAuthorizationFilter;
         this.authenticationProvider = authenticationProvider;
         this.authenticationEntryPoint = authenticationEntryPoint;

@@ -13,10 +13,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.dao.access.AccessTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RefreshTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
-import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -26,10 +25,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.*;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.googleAccessTokenResponse;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userDto;
 
+@SpringIntegrationTest
 @DisplayName("TokenRefreshService Spring Integration Test")
-class TokenRefreshServiceTest extends AbstractIntegrationTest {
+class TokenRefreshServiceTest {
 
     @Mock
     private AccessTokenAccessService accessTokenAccessServiceMock;

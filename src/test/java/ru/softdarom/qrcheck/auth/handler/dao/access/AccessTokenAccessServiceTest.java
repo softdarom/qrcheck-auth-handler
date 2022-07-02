@@ -10,7 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
@@ -18,10 +18,11 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.accessTokenDto;
 
+@SpringIntegrationTest
 @Sql(scripts = "classpath:sql/access/AccessTokenAccessService/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:sql/access/AccessTokenAccessService/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:sql/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
 @DisplayName("AccessTokenAccessService Spring Integration Test")
-class AccessTokenAccessServiceTest extends AbstractIntegrationTest {
+class AccessTokenAccessServiceTest {
 
     private static final Long DEFAULT_USER_ID = 1L;
 

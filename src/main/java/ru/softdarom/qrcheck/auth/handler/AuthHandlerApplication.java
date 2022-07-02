@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
 import ru.softdarom.qrcheck.auth.handler.config.property.LogbookProperties;
 import ru.softdarom.qrcheck.auth.handler.config.property.OpenApiProperties;
 
@@ -16,7 +17,8 @@ import ru.softdarom.qrcheck.auth.handler.config.property.OpenApiProperties;
 @EnableConfigurationProperties(
         {
                 LogbookProperties.class,
-                OpenApiProperties.class
+                OpenApiProperties.class,
+                ApiKeyProperties.class
         }
 )
 public class AuthHandlerApplication {

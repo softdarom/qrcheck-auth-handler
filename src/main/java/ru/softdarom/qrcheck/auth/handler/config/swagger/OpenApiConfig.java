@@ -9,8 +9,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.softdarom.qrcheck.auth.handler.config.property.ApiKeyProperties;
 import ru.softdarom.qrcheck.auth.handler.config.property.OpenApiProperties;
-import ru.softdarom.security.oauth2.config.property.ApiKeyProperties;
 
 @Configuration
 public class OpenApiConfig {

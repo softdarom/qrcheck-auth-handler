@@ -10,7 +10,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Collection;
 import java.util.Set;
@@ -21,10 +21,11 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.refreshTokenDto;
 
+@SpringIntegrationTest
 @Sql(scripts = "classpath:sql/access/RefreshTokenAccessService/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:sql/access/RefreshTokenAccessService/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:sql/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
 @DisplayName("RefreshTokenAccessService Spring Integration Test")
-class RefreshTokenAccessServiceTest extends AbstractIntegrationTest {
+class RefreshTokenAccessServiceTest {
 
     private static final Long DEFAULT_USER_ID = 1L;
     private static final Integer DEFAULT_SIZE_REFRESH_TOKEN_BY_USER_AND_PROVIDER = 1;

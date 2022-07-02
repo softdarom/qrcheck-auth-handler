@@ -13,7 +13,7 @@ create table auth.roles
     name varchar(100)                            not null
 );
 
-create unique index roles_name_uindex
+create unique index roles_name_uniq
     on auth.roles (name);
 
 comment on table auth.roles is 'A table stores inner roles the service';

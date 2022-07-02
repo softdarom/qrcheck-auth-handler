@@ -7,9 +7,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.transaction.annotation.Transactional;
 import ru.softdarom.qrcheck.auth.handler.dao.entity.RoleEntity;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,10 +20,11 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
 
+@SpringIntegrationTest
 @Sql(scripts = "classpath:sql/repository/RoleRepository/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:sql/repository/RoleRepository/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:sql/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
 @DisplayName("RoleRepository Spring Integration Test")
-class RoleRepositoryTest extends AbstractIntegrationTest {
+class RoleRepositoryTest {
 
     private static final Integer DEFAULT_SIZE_ROLES = 1;
 

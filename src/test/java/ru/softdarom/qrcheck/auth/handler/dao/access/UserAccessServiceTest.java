@@ -5,9 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.util.ReflectionTestUtils;
+import ru.softdarom.qrcheck.auth.handler.dao.repository.RoleRepository;
+import ru.softdarom.qrcheck.auth.handler.dao.repository.UserRepository;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
@@ -15,22 +19,25 @@ import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserTokenInfoDto;
-import ru.softdarom.qrcheck.auth.handler.test.AbstractIntegrationTest;
+import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.INFERRED;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateLong;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.userDto;
 
+@SpringIntegrationTest
 @Sql(scripts = "classpath:sql/access/UserAccessService/fill.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:sql/access/UserAccessService/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:sql/clear.sql", config = @SqlConfig(transactionMode = INFERRED), executionPhase = AFTER_TEST_METHOD)
 @DisplayName("UserAccessService Spring Integration Test")
-class UserAccessServiceTest extends AbstractIntegrationTest {
+class UserAccessServiceTest {
 
     private static final Integer DEFAULT_SIZE_REFRESH_TOKENS_BY_USER = 4;
     private static final Integer DEFAULT_SIZE_ROLES_BY_USER = 1;
@@ -94,6 +101,18 @@ class UserAccessServiceTest extends AbstractIntegrationTest {
         });
     }
 
+    @ParameterizedTest
+    @EnumSource(RoleType.class)
+    @DisplayName("changeRole(): returns a user with changed role")
+    void successfulChangeRole(RoleType role) {
+        var userExternalId = 3L;
+        var actual = assertDoesNotThrow(() -> userAccessService.changeRole(userExternalId, role));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertEquals(role, actual.getRoles().stream().findAny().orElseThrow().getName());
+        });
+    }
+
     //  -----------------------   failure tests   -------------------------
 
     @Test
@@ -115,8 +134,47 @@ class UserAccessServiceTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("save(): throws NotFoundException when role is null")
+    @DisplayName("save(): throws IllegalArgumentException when role is null")
     void failureChangeRoleNullRole() {
-        assertThrows(NotFoundException.class, () -> userAccessService.changeRole(generateLong(), null));
+        var randomId = generateLong();
+        assertThrows(IllegalArgumentException.class, () -> userAccessService.changeRole(randomId, null));
+    }
+
+    @ParameterizedTest
+    @EnumSource(RoleType.class)
+    @DisplayName("changeRole(): throws NotFoundException when a role not existed")
+    void failureChangeRoleNotFoundRole(RoleType role) {
+        var repositoryReal = (RoleRepository) ReflectionTestUtils.getField(userAccessService, "roleRepository");
+        var repositoryMock = Mockito.mock(RoleRepository.class);
+        ReflectionTestUtils.setField(userAccessService, "roleRepository", repositoryMock);
+
+        var randomId = generateLong();
+        when(repositoryMock.findByName(any())).thenReturn(Optional.empty());
+        assertAll(() -> {
+            assertThrows(NotFoundException.class, () -> userAccessService.changeRole(randomId, role));
+            verify(repositoryMock, only()).findByName(any());
+        });
+
+        Mockito.reset(repositoryMock);
+        ReflectionTestUtils.setField(userAccessService, "roleRepository", repositoryReal);
+    }
+
+    @ParameterizedTest
+    @EnumSource(RoleType.class)
+    @DisplayName("changeRole(): throws NotFoundException when a user not existed")
+    void failureChangeRoleNotFoundUser(RoleType role) {
+        var repositoryReal = (UserRepository) ReflectionTestUtils.getField(userAccessService, "userRepository");
+        var repositoryMock = Mockito.mock(UserRepository.class);
+        ReflectionTestUtils.setField(userAccessService, "userRepository", repositoryMock);
+
+        var randomId = generateLong();
+        when(repositoryMock.findByExternalUserId(any())).thenReturn(Optional.empty());
+        assertAll(() -> {
+            assertThrows(NotFoundException.class, () -> userAccessService.changeRole(randomId, role));
+            verify(repositoryMock, only()).findByExternalUserId(any());
+        });
+
+        Mockito.reset(repositoryMock);
+        ReflectionTestUtils.setField(userAccessService, "userRepository", repositoryReal);
     }
 }

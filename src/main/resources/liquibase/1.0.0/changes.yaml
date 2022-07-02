@@ -25,9 +25,21 @@ databaseChangeLog:
   - include:
       file: ddl/06_users_roles.sql
       relativeToChangelogFile: true
+  - include:
+      file: ddl/07_microservice.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ddl/08_api_keys.sql
+      relativeToChangelogFile: true
 
   - include:
       file: dml/01_roles.sql
+      relativeToChangelogFile: true
+  - include:
+      file: dml/02_microservices.sql
+      relativeToChangelogFile: true
+  - include:
+      file: dml/03_api_keys.sql
       relativeToChangelogFile: true
 
   - include:

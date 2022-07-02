@@ -31,7 +31,7 @@ public class RoleAccessServiceImpl implements RoleAccessService {
     @Override
     public RoleDto defaultRole() {
         return roleRepository.findByName(RoleType.USER).map(modelMapper::convertToDestination)
-                .orElseThrow(() -> new NotFoundException("Roles not found by " + Set.of(RoleType.USER)));
+                .orElseThrow(() -> new NotFoundException("Roles not found by " + RoleType.USER));
     }
 
     @Transactional
