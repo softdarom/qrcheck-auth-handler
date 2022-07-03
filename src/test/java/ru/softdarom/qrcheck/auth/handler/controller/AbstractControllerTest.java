@@ -78,14 +78,11 @@ abstract class AbstractControllerTest {
 
     protected HttpHeaders buildApiKeyHeader() {
         var headers = new HttpHeaders();
-        headers.set("X-Application-Version", generateString());
         headers.set(apiKeyProperties.getHeaderName(), DEFAULT_INCOMING_API_KEY);
         return headers;
     }
 
     protected HttpHeaders buildNotAuthHeader() {
-        var headers = new HttpHeaders();
-        headers.set("X-Application-Version", generateString());
-        return headers;
+        return new HttpHeaders();
     }
 }
