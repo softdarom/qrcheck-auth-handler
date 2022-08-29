@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface UserHandlerService {
 
+    boolean isExistedUser(Long externalUserId);
+
     Optional<Long> saveUser(ProviderUserDto request);
 
 }

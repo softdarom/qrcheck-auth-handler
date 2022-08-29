@@ -11,10 +11,11 @@ create table auth.user_token_info
     id       bigint default nextval('auth.user_token_info_seq') not null
         constraint user_token_info_pk primary key,
     user_id  bigint
-        constraint access_token_user_id_fk
+        constraint user_token_info_user_id_fk
             references auth.users (id)                          not null,
     provider varchar(100)                                       not null,
-    sub      varchar(255)                                       not null
+    sub      varchar(255)                                       not null,
+    active           boolean      default true
 );
 
 create unique index user_token_info_user_id_provider_uniq

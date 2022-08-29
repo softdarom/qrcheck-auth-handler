@@ -42,11 +42,6 @@ public class MicroserviceEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "microservice", orphanRemoval = true)
     private Set<ApiKeyEntity> apiKeys = new HashSet<>();
 
-    @PreRemove
-    private void onDelete() {
-        active = ActiveType.DISABLED;
-    }
-
     public void setApiKeys(Set<ApiKeyEntity> apiKeys) {
         if (Objects.isNull(apiKeys)) {
             this.apiKeys.clear();

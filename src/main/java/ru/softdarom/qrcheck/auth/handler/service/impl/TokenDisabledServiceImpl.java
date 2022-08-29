@@ -37,7 +37,7 @@ public class TokenDisabledServiceImpl implements TokenDisabledService {
     }
 
     @Override
-    public void disableOldAccessTokens(RefreshTokenDto refreshToken) {
+    public void disableAccessTokens(RefreshTokenDto refreshToken) {
         Assert.notNull(refreshToken, "The 'refreshToken' must not be null!");
         refreshToken.getAccessTokens()
                 .stream()
@@ -47,13 +47,13 @@ public class TokenDisabledServiceImpl implements TokenDisabledService {
     }
 
     @Override
-    public void disableOldAccessTokens(Collection<RefreshTokenDto> refreshTokens) {
+    public void disableAccessTokens(Collection<RefreshTokenDto> refreshTokens) {
         Assert.notNull(refreshTokens, "The 'refreshTokens' must not be null!");
-        refreshTokens.forEach(this::disableOldAccessTokens);
+        refreshTokens.forEach(this::disableAccessTokens);
     }
 
     @Override
-    public void disableOldRefreshToken(Collection<RefreshTokenDto> refreshTokens, ProviderType provider) {
+    public void disableRefreshToken(Collection<RefreshTokenDto> refreshTokens, ProviderType provider) {
         Assert.notNull(refreshTokens, "The 'refreshToken' must not be null!");
         Assert.notNull(provider, "The 'provider' must not be null!");
         refreshTokens

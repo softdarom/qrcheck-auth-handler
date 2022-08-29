@@ -1,5 +1,6 @@
 package ru.softdarom.qrcheck.auth.handler.service;
 
+import feign.FeignException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static ru.softdarom.qrcheck.auth.handler.test.generator.CommonGenerator.generateLong;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.providerUserDto;
 
 @SpringIntegrationTest
@@ -53,6 +55,19 @@ class UserHandlerServiceTest {
         });
     }
 
+    @Test
+    @DisplayName("isExistedUser(): returns true when a user is found")
+    void successfulIsExistedUser() {
+        var externalUserId = generateLong();
+        var response = providerUserDto();
+        when(userHandlerClientMock.get(any(), any())).thenReturn(ResponseEntity.ok(response));
+        assertAll(() -> {
+            var actual = assertDoesNotThrow(() -> service.isExistedUser(externalUserId));
+            assertTrue(actual);
+            verify(userHandlerClientMock).get(any(), any());
+        });
+    }
+
     //  -----------------------   failure tests   -------------------------
 
     @Test
@@ -61,6 +76,27 @@ class UserHandlerServiceTest {
         assertAll(() -> {
             assertThrows(IllegalArgumentException.class, () -> service.saveUser(null));
             verify(userHandlerClientMock, never()).save(any(), any());
+        });
+    }
+
+    @Test
+    @DisplayName("isExistedUser(): returns false when a user isn't found")
+    void failureIsExistedUser() {
+        var externalUserId = generateLong();
+        when(userHandlerClientMock.get(any(), any())).thenThrow(FeignException.NotFound.class);
+        assertAll(() -> {
+            var actual = assertDoesNotThrow(() -> service.isExistedUser(externalUserId));
+            assertFalse(actual);
+            verify(userHandlerClientMock).get(any(), any());
+        });
+    }
+
+    @Test
+    @DisplayName("isExistedUser(): throws IllegalArgumentException when a externalUserId is null")
+    void failureIsExistedUserNullExternalUserId() {
+        assertAll(() -> {
+            assertThrows(IllegalArgumentException.class, () -> service.isExistedUser(null));
+            verify(userHandlerClientMock, never()).get(any(), any());
         });
     }
 }

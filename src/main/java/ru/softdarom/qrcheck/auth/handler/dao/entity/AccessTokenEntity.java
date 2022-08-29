@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
                 @Index(name = "access_tokens_token_provider_uniq", columnList = "token, provider", unique = true)
         }
 )
-@SQLDelete(sql = "UPDATE access_tokens SET active = false WHERE id = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "update access_tokens set active = false where id = ?", check = ResultCheckStyle.COUNT)
 public class AccessTokenEntity {
 
     @Id
@@ -51,11 +51,6 @@ public class AccessTokenEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "refresh_token_id")
     private RefreshTokenEntity refreshToken;
-
-    @PreRemove
-    private void onDelete() {
-        active = ActiveType.DISABLED;
-    }
 
     @Override
     public String toString() {

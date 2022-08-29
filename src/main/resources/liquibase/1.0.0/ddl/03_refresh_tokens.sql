@@ -11,7 +11,7 @@ create table auth.refresh_tokens
     id       bigint  default nextval('auth.refresh_token_seq') not null
         constraint refresh_tokens_pk primary key,
     user_id  bigint
-        constraint access_token_user_id_fk
+        constraint refresh_token_user_id_fk
             references auth.users (id)                         not null,
     token    varchar(2000)                                     not null,
     provider varchar(100)                                      not null,

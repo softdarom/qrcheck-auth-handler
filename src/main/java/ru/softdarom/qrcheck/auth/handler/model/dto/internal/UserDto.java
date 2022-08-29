@@ -1,5 +1,6 @@
 package ru.softdarom.qrcheck.auth.handler.model.dto.internal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -29,11 +30,11 @@ public class UserDto {
     private ActiveType active = ActiveType.ENABLED;
 
     @Builder.Default
-    @JsonProperty("refreshTokens")
+    @JsonIgnore
     private Set<RefreshTokenDto> refreshTokens = new HashSet<>();
 
     @Builder.Default
-    @JsonProperty("tokenInfo")
+    @JsonIgnore
     private Set<UserTokenInfoDto> tokenInfo = new HashSet<>();
 
     @Builder.Default

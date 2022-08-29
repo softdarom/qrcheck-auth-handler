@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.dao.access.AccessTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RefreshTokenAccessService;
+import ru.softdarom.qrcheck.auth.handler.dao.access.UserAccessService;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
@@ -41,6 +42,15 @@ class TokenRefreshServiceTest {
     @Mock
     private OAuth2ProviderService oAuth2ProviderServiceMock;
 
+    @Mock
+    private TokenDisabledService tokenDisabledServiceMock;
+
+    @Mock
+    private UserHandlerService userHandlerServiceMock;
+
+    @Mock
+    private UserAccessService userAccessServiceMock;
+
     @Autowired
     private TokenRefreshService service;
 
@@ -50,11 +60,21 @@ class TokenRefreshServiceTest {
         ReflectionTestUtils.setField(service, "accessTokenAccessService", accessTokenAccessServiceMock);
         ReflectionTestUtils.setField(service, "refreshTokenAccessService", refreshTokenAccessServiceMock);
         ReflectionTestUtils.setField(service, "oAuth2ProviderService", oAuth2ProviderServiceMock);
+        ReflectionTestUtils.setField(service, "tokenDisabledService", tokenDisabledServiceMock);
+        ReflectionTestUtils.setField(service, "userHandlerService", userHandlerServiceMock);
+        ReflectionTestUtils.setField(service, "userAccessService", userAccessServiceMock);
     }
 
     @AfterEach
     void tearDown() {
-        reset(accessTokenAccessServiceMock, refreshTokenAccessServiceMock, oAuth2ProviderServiceMock);
+        reset(
+                accessTokenAccessServiceMock,
+                refreshTokenAccessServiceMock,
+                oAuth2ProviderServiceMock,
+                tokenDisabledServiceMock,
+                userHandlerServiceMock,
+                userAccessServiceMock
+        );
     }
 
     //  -----------------------   successful tests   -------------------------
@@ -71,15 +91,22 @@ class TokenRefreshServiceTest {
                         .flatMap(Collection::stream)
                         .findAny();
         when(accessTokenAccessServiceMock.findByToken(any())).thenReturn(accessToken);
+        when(userHandlerServiceMock.isExistedUser(any())).thenReturn(true);
         when(refreshTokenAccessServiceMock.find(any(), any())).thenReturn(user.getRefreshTokens());
         when(oAuth2ProviderServiceMock.refreshToken(any(), any())).thenReturn(googleAccessTokenResponse());
+        doNothing().when(tokenDisabledServiceMock).disableAccessTokens(any(RefreshTokenDto.class));
         when(accessTokenAccessServiceMock.save(any())).thenReturn(accessToken.orElseThrow());
-        assertDoesNotThrow(() -> service.refresh(UUID.randomUUID().toString()));
+        var accessTokenAsString = UUID.randomUUID().toString();
+        assertDoesNotThrow(() -> service.refresh(accessTokenAsString));
         assertAll(() -> {
             verify(accessTokenAccessServiceMock).findByToken(any());
+            verify(userHandlerServiceMock).isExistedUser(any());
             verify(refreshTokenAccessServiceMock).find(any(), any());
             verify(oAuth2ProviderServiceMock).refreshToken(any(), any());
+            verify(tokenDisabledServiceMock).disableAccessTokens(any(RefreshTokenDto.class));
             verify(accessTokenAccessServiceMock).save(any());
+            verify(userAccessServiceMock, never()).findByExternalUserId(any());
+            verify(userAccessServiceMock, never()).delete(any());
         });
     }
 
@@ -89,22 +116,12 @@ class TokenRefreshServiceTest {
     @DisplayName("refresh(): throws IllegalArgumentException when an access token is null")
     void failureRefreshAccessTokenNull() {
         assertThrows(IllegalArgumentException.class, () -> service.refresh(null));
-        assertAll(() -> {
-            verify(accessTokenAccessServiceMock, never()).findByToken(any());
-            verify(refreshTokenAccessServiceMock, never()).find(any(), any());
-            verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
-        });
     }
 
     @Test
     @DisplayName("refresh(): throws IllegalArgumentException when an access token is empty")
     void failureRefreshAccessTokenEmpty() {
         assertThrows(IllegalArgumentException.class, () -> service.refresh(""));
-        assertAll(() -> {
-            verify(accessTokenAccessServiceMock, never()).findByToken(any());
-            verify(refreshTokenAccessServiceMock, never()).find(any(), any());
-            verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
-        });
     }
 
     @Test
@@ -117,6 +134,10 @@ class TokenRefreshServiceTest {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock, never()).find(any(), any());
             verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
+            verify(tokenDisabledServiceMock, never()).disableAccessTokens(any(RefreshTokenDto.class));
+            verify(userHandlerServiceMock, never()).isExistedUser(any());
+            verify(userAccessServiceMock, never()).findByExternalUserId(any());
+            verify(userAccessServiceMock, never()).delete(any());
         });
     }
 
@@ -133,12 +154,47 @@ class TokenRefreshServiceTest {
                         .findAny();
         when(accessTokenAccessServiceMock.findByToken(any())).thenReturn(accessToken);
         when(refreshTokenAccessServiceMock.find(any(), any())).thenReturn(Set.of());
+        when(userHandlerServiceMock.isExistedUser(any())).thenReturn(true);
         var accessTokenAsString = UUID.randomUUID().toString();
         assertThrows(NotFoundException.class, () -> service.refresh(accessTokenAsString));
         assertAll(() -> {
             verify(accessTokenAccessServiceMock).findByToken(any());
             verify(refreshTokenAccessServiceMock).find(any(), any());
+            verify(accessTokenAccessServiceMock, never()).save(any());
             verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
+            verify(tokenDisabledServiceMock, never()).disableAccessTokens(any(RefreshTokenDto.class));
+            verify(userAccessServiceMock, never()).findByExternalUserId(any());
+            verify(userAccessServiceMock, never()).delete(any());
+        });
+    }
+
+    @ParameterizedTest
+    @EnumSource(ProviderType.class)
+    @DisplayName("refresh(): throws NotFoundException when a user isn't found")
+    void failureRefreshNotFoundUser(ProviderType provider) {
+        var user = userDto(provider);
+        var accessToken =
+                user.getRefreshTokens()
+                        .stream()
+                        .map(RefreshTokenDto::getAccessTokens)
+                        .flatMap(Collection::stream)
+                        .findAny();
+        when(accessTokenAccessServiceMock.findByToken(any())).thenReturn(accessToken);
+        when(userHandlerServiceMock.isExistedUser(any())).thenReturn(false);
+        when(userAccessServiceMock.findByExternalUserId(any())).thenReturn(Optional.of(user));
+        doNothing().when(userAccessServiceMock).delete(any());
+        var accessTokenAsString = UUID.randomUUID().toString();
+        assertThrows(NotFoundException.class, () -> service.refresh(accessTokenAsString));
+        assertAll(() -> {
+            verify(accessTokenAccessServiceMock).findByToken(any());
+            verify(userHandlerServiceMock).isExistedUser(any());
+            verify(userAccessServiceMock).findByExternalUserId(any());
+            verify(userAccessServiceMock).delete(any());
+            verify(refreshTokenAccessServiceMock, never()).find(any(), any());
+            verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
+            verify(tokenDisabledServiceMock, never()).disableAccessTokens(any(RefreshTokenDto.class));
+            verify(tokenDisabledServiceMock, never()).disableAllTokens(anyCollection(), any());
+            verify(accessTokenAccessServiceMock, never()).save(any());
         });
     }
 }

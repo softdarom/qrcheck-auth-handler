@@ -11,7 +11,7 @@ create table auth.api_keys
     id              bigint  default nextval('auth.api_key_seq') not null
         constraint api_key_pk primary key,
     microservice_id bigint
-        constraint microservice_id_fk
+        constraint api_key_microservice_id_fk
             references auth.microservices (id)                  not null,
     key             uuid                                        not null,
     type            varchar(255)                                not null,

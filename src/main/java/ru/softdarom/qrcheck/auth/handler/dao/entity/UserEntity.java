@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
@@ -26,8 +25,7 @@ import java.util.Set;
                 @Index(name = "users_external_user_id_uniq", columnList = "external_user_id", unique = true)
         }
 )
-@SQLDelete(sql = "UPDATE users SET active = false, updated = current_timestamp WHERE id = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "active = true")
+@SQLDelete(sql = "update users set active = false, updated = current_timestamp where id = ?", check = ResultCheckStyle.COUNT)
 public class UserEntity {
 
     @Id
@@ -102,12 +100,6 @@ public class UserEntity {
     @PreUpdate
     private void onUpdate() {
         updated = LocalDateTime.now();
-    }
-
-    @PreRemove
-    private void onDelete() {
-        updated = LocalDateTime.now();
-        active = ActiveType.DISABLED;
     }
 
     @Override

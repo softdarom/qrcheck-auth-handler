@@ -87,8 +87,8 @@ class TokenServiceTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenDisabledServiceMock, never()).disableOldRefreshToken(any(), any());
-            verify(tokenDisabledServiceMock, never()).disableOldAccessTokens(anySet());
+            verify(tokenDisabledServiceMock, never()).disableRefreshToken(any(), any());
+            verify(tokenDisabledServiceMock, never()).disableAccessTokens(anySet());
         });
     }
 
@@ -106,8 +106,7 @@ class TokenServiceTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenDisabledServiceMock).disableOldRefreshToken(any(), any());
-            verify(tokenDisabledServiceMock).disableOldAccessTokens(anySet());
+            verify(tokenDisabledServiceMock).disableAllTokens(any(), any());
         });
     }
 
@@ -125,8 +124,7 @@ class TokenServiceTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenDisabledServiceMock).disableOldRefreshToken(any(), any());
-            verify(tokenDisabledServiceMock).disableOldAccessTokens(anySet());
+            verify(tokenDisabledServiceMock).disableAllTokens(any(), any());
         });
     }
 
