@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
@@ -53,6 +54,7 @@ public class RefreshTokenEntity {
 
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, mappedBy = "refreshToken", orphanRemoval = true)
+    @Where(clause = "active = true")
     private Set<AccessTokenEntity> accessTokens = new HashSet<>();
 
     public void setAccessTokens(Set<AccessTokenEntity> accessTokens) {

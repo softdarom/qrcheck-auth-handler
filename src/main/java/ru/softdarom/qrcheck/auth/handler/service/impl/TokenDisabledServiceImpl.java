@@ -6,14 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.dao.access.AccessTokenAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.access.RefreshTokenAccessService;
-import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RefreshTokenDto;
 import ru.softdarom.qrcheck.auth.handler.service.TokenDisabledService;
 
 import java.util.Collection;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "SERVICE")
@@ -32,35 +31,31 @@ public class TokenDisabledServiceImpl implements TokenDisabledService {
     @Override
     public void disableAccessToken(AccessTokenDto accessToken) {
         Assert.notNull(accessToken, "The 'accessToken' must not be null!");
-        accessToken.setActive(ActiveType.DISABLED);
-        accessTokenAccessService.save(accessToken);
+        accessTokenAccessService.delete(accessToken.getId());
     }
 
     @Override
     public void disableAccessTokens(RefreshTokenDto refreshToken) {
         Assert.notNull(refreshToken, "The 'refreshToken' must not be null!");
-        refreshToken.getAccessTokens()
-                .stream()
-                .filter(it -> Objects.equals(it.getProvider(), refreshToken.getProvider()))
-                .forEach(it -> it.setActive(ActiveType.DISABLED));
-        refreshTokenAccessService.save(refreshToken);
+        accessTokenAccessService.deleteAll(refreshToken.getAccessTokens());
     }
 
     @Override
     public void disableAccessTokens(Collection<RefreshTokenDto> refreshTokens) {
-        Assert.notNull(refreshTokens, "The 'refreshTokens' must not be null!");
-        refreshTokens.forEach(this::disableAccessTokens);
+        Assert.notEmpty(refreshTokens, "The 'refreshTokens' must not be empty or null!");
+        var accessTokens = refreshTokens
+                .stream()
+                .map(RefreshTokenDto::getAccessTokens)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        accessTokenAccessService.deleteAll(accessTokens);
     }
 
     @Override
-    public void disableRefreshToken(Collection<RefreshTokenDto> refreshTokens, ProviderType provider) {
+    public void disableRefreshTokens(Collection<RefreshTokenDto> refreshTokens, ProviderType provider) {
         Assert.notNull(refreshTokens, "The 'refreshToken' must not be null!");
         Assert.notNull(provider, "The 'provider' must not be null!");
-        refreshTokens
-                .stream()
-                .filter(it -> Objects.equals(it.getProvider(), provider))
-                .forEach(it -> it.setActive(ActiveType.DISABLED));
-        refreshTokenAccessService.save(refreshTokens);
+        refreshTokenAccessService.deleteAll(refreshTokens);
     }
 
 }

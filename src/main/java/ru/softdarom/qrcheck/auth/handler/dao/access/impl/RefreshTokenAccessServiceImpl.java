@@ -53,8 +53,19 @@ public class RefreshTokenAccessServiceImpl implements RefreshTokenAccessService 
     @Override
     @Transactional
     public Set<RefreshTokenDto> save(Collection<RefreshTokenDto> dtos) {
-        Assert.notNull(dtos, "The 'dtos' must not be null!");
+        Assert.notEmpty(dtos, "The 'dtos' must not be empty or null!");
         var entities = modelMapper.convertToSources(dtos);
         return modelMapper.convertToDestinations(refreshTokenRepository.saveAll(entities));
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll(Collection<RefreshTokenDto> dtos) {
+        Assert.notEmpty(dtos, "The 'dtos' must not be empty or null!");
+        var entities =
+                dtos.stream()
+                        .map(modelMapper::convertToSource)
+                        .collect(Collectors.toSet());
+        refreshTokenRepository.deleteAll(entities);
     }
 }

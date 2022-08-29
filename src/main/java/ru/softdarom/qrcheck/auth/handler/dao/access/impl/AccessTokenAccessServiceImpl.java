@@ -10,7 +10,9 @@ import ru.softdarom.qrcheck.auth.handler.dao.repository.AccessTokenRepository;
 import ru.softdarom.qrcheck.auth.handler.mapper.impl.AccessTokenDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.AccessTokenDto;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "ACCESS-SERVICE")
@@ -45,5 +47,23 @@ public class AccessTokenAccessServiceImpl implements AccessTokenAccessService {
         Assert.notNull(dto, "The 'dto' must not be null!");
         var entity = modelMapper.convertToSource(dto);
         return modelMapper.convertToDestination(accessTokenRepository.save(entity));
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        Assert.notNull(id, "The 'id' must not be null!");
+        accessTokenRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll(Collection<AccessTokenDto> dtos) {
+        Assert.notEmpty(dtos, "The 'dtos' must not be empty or null!");
+        var entities =
+                dtos.stream()
+                        .map(modelMapper::convertToSource)
+                        .collect(Collectors.toSet());
+        accessTokenRepository.deleteAll(entities);
     }
 }
