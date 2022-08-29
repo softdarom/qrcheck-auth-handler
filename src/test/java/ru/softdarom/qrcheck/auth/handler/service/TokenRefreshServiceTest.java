@@ -193,7 +193,7 @@ class TokenRefreshServiceTest {
             verify(refreshTokenAccessServiceMock, never()).find(any(), any());
             verify(oAuth2ProviderServiceMock, never()).refreshToken(any(), any());
             verify(tokenDisabledServiceMock, never()).disableAccessTokens(any(RefreshTokenDto.class));
-            verify(tokenDisabledServiceMock, never()).disableAllTokens(anyCollection(), any());
+            verify(tokenDisabledServiceMock, never()).disableRefreshTokens(anyCollection(), any());
             verify(accessTokenAccessServiceMock, never()).save(any());
         });
     }

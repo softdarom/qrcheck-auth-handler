@@ -13,4 +13,6 @@ public interface RefreshTokenAccessService {
     RefreshTokenDto save(RefreshTokenDto dto);
 
     Set<RefreshTokenDto> save(Collection<RefreshTokenDto> dtos);
+
+    void deleteAll(Collection<RefreshTokenDto> dtos);
 }

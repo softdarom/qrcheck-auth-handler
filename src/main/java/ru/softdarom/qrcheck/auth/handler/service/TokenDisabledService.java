@@ -14,11 +14,6 @@ public interface TokenDisabledService {
 
     void disableAccessTokens(Collection<RefreshTokenDto> refreshTokens);
 
-    void disableRefreshToken(Collection<RefreshTokenDto> refreshTokens, ProviderType provider);
-
-    default void disableAllTokens(Collection<RefreshTokenDto> refreshTokens, ProviderType provider) {
-        disableRefreshToken(refreshTokens, provider);
-        disableAccessTokens(refreshTokens);
-    }
+    void disableRefreshTokens(Collection<RefreshTokenDto> refreshTokens, ProviderType provider);
 
 }

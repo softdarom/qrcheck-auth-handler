@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
@@ -25,6 +26,7 @@ import java.util.Set;
         }
 )
 @SQLDelete(sql = "update microservices set active = false where id = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "active = true")
 public class MicroserviceEntity {
 
     @Id

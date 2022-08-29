@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.softdarom.qrcheck.auth.handler.model.base.ActiveType;
 import ru.softdarom.qrcheck.auth.handler.util.JsonHelper;
 
@@ -47,6 +48,7 @@ public class UserEntity {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @Where(clause = "active = true")
     private Set<RefreshTokenEntity> refreshTokens = new HashSet<>();
 
     @JsonIgnore

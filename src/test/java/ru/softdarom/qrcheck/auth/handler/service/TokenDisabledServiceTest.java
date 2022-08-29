@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.reset;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.Mockito.*;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.accessTokenDto;
 import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.refreshTokenDto;
 
@@ -63,7 +65,7 @@ class TokenDisabledServiceTest {
         refreshToken.setAccessTokens(Set.of(accessToken));
         assertAll(() -> {
             assertDoesNotThrow(() -> service.disableAccessToken(accessToken));
-            assertEquals(ActiveType.DISABLED, accessToken.getActive());
+            verify(accessTokenAccessServiceMock).delete(any());
         });
     }
 
@@ -76,7 +78,7 @@ class TokenDisabledServiceTest {
         refreshToken.setAccessTokens(Set.of(accessToken));
         assertAll(() -> {
             assertDoesNotThrow(() -> service.disableAccessTokens(refreshToken));
-            assertEquals(ActiveType.DISABLED, accessToken.getActive());
+            verify(accessTokenAccessServiceMock).deleteAll(anyCollection());
         });
     }
 
@@ -90,19 +92,19 @@ class TokenDisabledServiceTest {
         var refreshTokens = Set.of(refreshToken);
         assertAll(() -> {
             assertDoesNotThrow(() -> service.disableAccessTokens(refreshTokens));
-            assertEquals(ActiveType.DISABLED, accessToken.getActive());
+            verify(accessTokenAccessServiceMock, atLeastOnce()).deleteAll(anyCollection());
         });
     }
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableRefreshToken(): disables refresh tokens")
+    @DisplayName("disableRefreshTokens(): disables refresh tokens")
     void successfulDisableRefreshToken(ProviderType provider) {
         var refreshToken = refreshTokenDto(provider);
         var refreshTokens = Set.of(refreshToken);
         assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableRefreshToken(refreshTokens, provider));
-            assertEquals(ActiveType.DISABLED, refreshToken.getActive());
+            assertDoesNotThrow(() -> service.disableRefreshTokens(refreshTokens, provider));
+            verify(refreshTokenAccessServiceMock).deleteAll(anyCollection());
         });
     }
 
@@ -130,15 +132,15 @@ class TokenDisabledServiceTest {
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableRefreshToken(): throws IllegalArgumentException when refresh tokens is null")
+    @DisplayName("disableRefreshTokens(): throws IllegalArgumentException when refresh tokens is null")
     void failureDisableRefreshTokenNullRefreshTokens(ProviderType provider) {
-        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshToken(null, provider));
+        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshTokens(null, provider));
     }
 
     @Test
-    @DisplayName("disableRefreshToken(): throws IllegalArgumentException when a provider is null")
+    @DisplayName("disableRefreshTokens(): throws IllegalArgumentException when a provider is null")
     void failureDisableRefreshTokenNullProvider() {
         var refreshTokens = Set.of(refreshTokenDto(ProviderType.QRCHECK));
-        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshToken(refreshTokens, null));
+        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshTokens(refreshTokens, null));
     }
 }
