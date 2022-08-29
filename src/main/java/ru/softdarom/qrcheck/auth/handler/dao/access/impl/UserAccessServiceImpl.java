@@ -52,9 +52,15 @@ public class UserAccessServiceImpl implements UserAccessService {
         Assert.notNull(externalUserId, "The 'externalUserId' must not be null!");
         Assert.notNull(role, "The 'role' must not be null!");
         var newRole = roleRepository.findByName(role).orElseThrow(() -> new NotFoundException("Role not found by " + role));
-        var user = userRepository.findByExternalUserId(externalUserId)
-                .orElseThrow(() -> new NotFoundException("User not found by external id " + externalUserId));
+        var user = userRepository.findByExternalUserId(externalUserId).orElseThrow(() -> new NotFoundException("User not found by external id " + externalUserId));
         user.setRoles(Set.of(newRole));
         return userMapper.convertToDestination(user);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long userId) {
+        Assert.notNull(userId, "The 'userId' must not be null!");
+        userRepository.deleteById(userId);
     }
 }

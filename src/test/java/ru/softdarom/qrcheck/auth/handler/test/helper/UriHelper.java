@@ -2,7 +2,14 @@ package ru.softdarom.qrcheck.auth.handler.test.helper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UriHelper {
@@ -17,5 +24,20 @@ public final class UriHelper {
                 .port(port)
                 .path(path)
                 .build().toString();
+    }
+
+    public static String generateUri(String path, Map<String, Object> queryParams) {
+        var encodedQueryParams =
+                queryParams.entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                it -> List.of(URLEncoder.encode(it.getValue().toString(), StandardCharsets.UTF_8)))
+                        );
+        return UriComponentsBuilder
+                .newInstance()
+                .path(path)
+                .queryParams(new LinkedMultiValueMap<>(encodedQueryParams))
+                .toUriString();
     }
 }

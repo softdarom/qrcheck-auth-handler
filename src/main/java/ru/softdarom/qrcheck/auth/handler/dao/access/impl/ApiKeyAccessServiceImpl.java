@@ -7,16 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.softdarom.qrcheck.auth.handler.dao.access.ApiKeyAccessService;
 import ru.softdarom.qrcheck.auth.handler.dao.entity.ApiKeyEntity;
-import ru.softdarom.qrcheck.auth.handler.dao.entity.MicroserviceEntity;
 import ru.softdarom.qrcheck.auth.handler.dao.repository.ApiKeyRepository;
 import ru.softdarom.qrcheck.auth.handler.dao.repository.MicroserviceRepository;
-import ru.softdarom.qrcheck.auth.handler.mapper.impl.ApiKeyDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.mapper.impl.MicroserviceDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.model.base.ApiKeyType;
-import ru.softdarom.qrcheck.auth.handler.model.dto.internal.ApiKeyDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.MicroserviceDto;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -78,25 +74,13 @@ public class ApiKeyAccessServiceImpl implements ApiKeyAccessService {
     @Transactional
     public void deleteApiKeys(String serviceName, Set<UUID> apiKeys) {
         Assert.hasText(serviceName, NOT_EMPTY_ARG_MESSAGE);
-        Assert.notNull(apiKeys, "The 'apiKeys' must not be null!");
-        var microserviceOptional = microserviceRepository.findByName(serviceName);
-        if (microserviceOptional.isEmpty()) {
-            LOGGER.warn("A microservice not found by name [{}]. Do nothing", serviceName);
+        Assert.notEmpty(apiKeys, "The 'apiKeys' must not be empty or null!");
+        var savedApiKeys = apiKeyRepository.findAllByMicroserviceAndKeys(serviceName, apiKeys);
+        if (savedApiKeys.isEmpty()) {
+            LOGGER.warn("Api keys nof found fro deleting! Do noting. Return");
             return;
         }
-        var apiKeyIds = microserviceOptional
-                .map(MicroserviceEntity::getApiKeys)
-                .orElse(Set.of())
-                .stream()
-                .filter(it -> apiKeys.contains(it.getKey()))
-                .map(ApiKeyEntity::getId)
-                .collect(Collectors.toSet());
-
-        if (apiKeyIds.isEmpty()) {
-            LOGGER.warn("Api keys not found for deleting. Do nothing. Return.");
-            return;
-        }
-        LOGGER.warn("Api key (ids: {}) will be removed!", apiKeyIds);
-        apiKeyRepository.deleteAllById(apiKeyIds);
+        LOGGER.info("Api key(s) (key: {}) will be removed!", apiKeys);
+        apiKeyRepository.deleteAll(savedApiKeys);
     }
 }

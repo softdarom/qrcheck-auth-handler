@@ -69,39 +69,39 @@ class TokenDisabledServiceTest {
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableOldAccessTokens(refreshToken): disables access tokens")
-    void successfulDisableOldAccessTokens(ProviderType provider) {
+    @DisplayName("disableAccessTokens(refreshToken): disables access tokens")
+    void successfulDisableAccessTokens(ProviderType provider) {
         var accessToken = accessTokenDto(provider);
         var refreshToken = refreshTokenDto(provider);
         refreshToken.setAccessTokens(Set.of(accessToken));
         assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldAccessTokens(refreshToken));
+            assertDoesNotThrow(() -> service.disableAccessTokens(refreshToken));
             assertEquals(ActiveType.DISABLED, accessToken.getActive());
         });
     }
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableOldAccessTokens(refreshTokens): disables access tokens")
-    void successfulDisableOldAccessTokensSet(ProviderType provider) {
+    @DisplayName("disableAccessTokens(refreshTokens): disables access tokens")
+    void successfulDisableAccessTokensSet(ProviderType provider) {
         var accessToken = accessTokenDto(provider);
         var refreshToken = refreshTokenDto(provider);
         refreshToken.setAccessTokens(Set.of(accessToken));
         var refreshTokens = Set.of(refreshToken);
         assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldAccessTokens(refreshTokens));
+            assertDoesNotThrow(() -> service.disableAccessTokens(refreshTokens));
             assertEquals(ActiveType.DISABLED, accessToken.getActive());
         });
     }
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableOldRefreshToken(): disables refresh tokens")
-    void successfulDisableOldRefreshToken(ProviderType provider) {
+    @DisplayName("disableRefreshToken(): disables refresh tokens")
+    void successfulDisableRefreshToken(ProviderType provider) {
         var refreshToken = refreshTokenDto(provider);
         var refreshTokens = Set.of(refreshToken);
         assertAll(() -> {
-            assertDoesNotThrow(() -> service.disableOldRefreshToken(refreshTokens, provider));
+            assertDoesNotThrow(() -> service.disableRefreshToken(refreshTokens, provider));
             assertEquals(ActiveType.DISABLED, refreshToken.getActive());
         });
     }
@@ -117,28 +117,28 @@ class TokenDisabledServiceTest {
     }
 
     @Test
-    @DisplayName("disableOldAccessTokens(refreshToken): throws IllegalArgumentException when a refresh tokens is null")
-    void failureDisableOldAccessTokensNullRefreshToken() {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldAccessTokens((RefreshTokenDto) null));
+    @DisplayName("disableAccessTokens(refreshToken): throws IllegalArgumentException when a refresh tokens is null")
+    void failureDisableAccessTokensNullRefreshToken() {
+        assertThrows(IllegalArgumentException.class, () -> service.disableAccessTokens((RefreshTokenDto) null));
     }
 
     @Test
-    @DisplayName("disableOldAccessTokens(refreshTokens): throws IllegalArgumentException when a collection of refresh tokens is null")
-    void failureDisableOldAccessTokensNullRefreshTokens() {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldAccessTokens((Collection<RefreshTokenDto>) null));
+    @DisplayName("disableAccessTokens(refreshTokens): throws IllegalArgumentException when a collection of refresh tokens is null")
+    void failureDisableAccessTokensNullRefreshTokens() {
+        assertThrows(IllegalArgumentException.class, () -> service.disableAccessTokens((Collection<RefreshTokenDto>) null));
     }
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
-    @DisplayName("disableOldRefreshToken(): throws IllegalArgumentException when refresh tokens is null")
-    void failureDisableOldRefreshTokenNullRefreshTokens(ProviderType provider) {
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldRefreshToken(null, provider));
+    @DisplayName("disableRefreshToken(): throws IllegalArgumentException when refresh tokens is null")
+    void failureDisableRefreshTokenNullRefreshTokens(ProviderType provider) {
+        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshToken(null, provider));
     }
 
     @Test
-    @DisplayName("disableOldRefreshToken(): throws IllegalArgumentException when a provider is null")
-    void failureDisableOldRefreshTokenNullProvider() {
+    @DisplayName("disableRefreshToken(): throws IllegalArgumentException when a provider is null")
+    void failureDisableRefreshTokenNullProvider() {
         var refreshTokens = Set.of(refreshTokenDto(ProviderType.QRCHECK));
-        assertThrows(IllegalArgumentException.class, () -> service.disableOldRefreshToken(refreshTokens, null));
+        assertThrows(IllegalArgumentException.class, () -> service.disableRefreshToken(refreshTokens, null));
     }
 }

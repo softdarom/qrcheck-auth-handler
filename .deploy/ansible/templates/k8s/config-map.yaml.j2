@@ -12,7 +12,7 @@ data:
   application.yaml: |
     {{ lookup('template', '{{ playbook_dir }}/templates/application/application.yaml.j2') | indent }}
   logback.groovy: |
-    {{ lookup('template', '{{ playbook_dir }}/templates/application/logback.groovy.j2') | indent }}
+    {{ lookup('template', '{{ playbook_dir }}/templates/application/logback.xml.j2') | indent }}
 ---
 
 kind: ConfigMap

@@ -13,4 +13,6 @@ public interface UserAccessService {
 
     UserDto changeRole(Long externalUserId, RoleType role);
 
+    void delete(Long userId);
+
 }

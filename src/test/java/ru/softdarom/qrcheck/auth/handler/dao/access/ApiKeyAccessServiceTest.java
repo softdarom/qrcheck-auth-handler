@@ -116,25 +116,6 @@ class ApiKeyAccessServiceTest {
     }
 
     @Test
-    @DisplayName("deleteApiKeys(string, set): does nothing when a microservice not found")
-    @Sql(
-            scripts = "classpath:sql/access/ApiKeyAccessServiceTest/fill.sql",
-            config = @SqlConfig(transactionMode = INFERRED), executionPhase = BEFORE_TEST_METHOD
-    )
-    void successfulDeleteApiKeysNotFoundMicroservice() {
-        var notExisted = generateString();
-        assertDoesNotThrow(() -> apiKeyAccessService.deleteApiKeys(notExisted, API_KEYS_FOR_DELETING));
-        assertAll(() -> {
-            var testApiKeys = apiKeyAccessService.find(MICROSERVICE_NAME_FOR_DELETING, DEFAULT_TYPE);
-            var dmlIncomingApiKeys = apiKeyAccessService.find(defaultServiceName, ApiKeyType.INCOMING);
-            var dmlOutgoingApiKeys = apiKeyAccessService.find(defaultServiceName, ApiKeyType.OUTGOING);
-            assertFalse(testApiKeys.isEmpty());
-            assertFalse(dmlIncomingApiKeys.isEmpty());
-            assertFalse(dmlOutgoingApiKeys.isEmpty());
-        });
-    }
-
-    @Test
     @DisplayName("deleteApiKeys(string, set): does nothing when a api keys not found")
     @Sql(
             scripts = "classpath:sql/access/ApiKeyAccessServiceTest/fill.sql",

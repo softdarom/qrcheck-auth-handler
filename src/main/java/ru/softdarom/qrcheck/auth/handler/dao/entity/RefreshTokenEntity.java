@@ -26,7 +26,7 @@ import java.util.Set;
                 @Index(name = "refresh_tokens_token_provider_uniq", columnList = "token, provider", unique = true),
         }
 )
-@SQLDelete(sql = "UPDATE refresh_tokens SET active = false WHERE id = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "update refresh_tokens set active = false where id = ?", check = ResultCheckStyle.COUNT)
 public class RefreshTokenEntity {
 
     @Id
@@ -52,7 +52,7 @@ public class RefreshTokenEntity {
     private UserEntity user;
 
     @JsonIgnore
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, mappedBy = "refreshToken")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, mappedBy = "refreshToken", orphanRemoval = true)
     private Set<AccessTokenEntity> accessTokens = new HashSet<>();
 
     public void setAccessTokens(Set<AccessTokenEntity> accessTokens) {
@@ -62,11 +62,6 @@ public class RefreshTokenEntity {
         } else {
             this.accessTokens = new HashSet<>();
         }
-    }
-
-    @PreRemove
-    private void onDelete() {
-        active = ActiveType.DISABLED;
     }
 
     @Override
