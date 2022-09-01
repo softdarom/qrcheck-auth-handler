@@ -11,7 +11,7 @@ data:
     {{ lookup('template', '{{ playbook_dir }}/templates/application/bootstrap.yaml.j2') | indent }}
   application.yaml: |
     {{ lookup('template', '{{ playbook_dir }}/templates/application/application.yaml.j2') | indent }}
-  logback.groovy: |
+  logback.xml: |
     {{ lookup('template', '{{ playbook_dir }}/templates/application/logback.xml.j2') | indent }}
 ---
 
