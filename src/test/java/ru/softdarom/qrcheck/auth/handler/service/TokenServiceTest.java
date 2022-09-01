@@ -41,9 +41,6 @@ class TokenServiceTest {
     private TokenRefreshService tokenRefreshServiceMock;
 
     @Mock
-    private TokenDisabledService tokenDisabledServiceMock;
-
-    @Mock
     private UserHandlerService userHandlerServiceMock;
 
     @Autowired
@@ -56,7 +53,6 @@ class TokenServiceTest {
         ReflectionTestUtils.setField(service, "userAccessService", userAccessServiceMock);
         ReflectionTestUtils.setField(service, "tokenVerifyService", tokenVerifyServiceMock);
         ReflectionTestUtils.setField(service, "tokenRefreshService", tokenRefreshServiceMock);
-        ReflectionTestUtils.setField(service, "tokenDisabledService", tokenDisabledServiceMock);
         ReflectionTestUtils.setField(service, "userHandlerService", userHandlerServiceMock);
     }
 
@@ -66,7 +62,6 @@ class TokenServiceTest {
                 userAccessServiceMock,
                 tokenVerifyServiceMock,
                 tokenRefreshServiceMock,
-                tokenDisabledServiceMock,
                 userHandlerServiceMock
         );
     }
@@ -87,7 +82,6 @@ class TokenServiceTest {
             verify(roleAccessServiceMock).defaultRole();
             verify(userAccessServiceMock).findByExternalUserId(any());
             verify(userAccessServiceMock).save(any());
-            verify(tokenDisabledServiceMock, never()).disableAccessTokens(anySet());
         });
     }
 
