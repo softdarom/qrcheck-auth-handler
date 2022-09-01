@@ -1,6 +1,6 @@
 url={{ liquibase.url }}
 username={{ liquibase.username }}
 password={{ liquibase.password }}
-schema=auth
+schema={{ liquibase.schema }}
 context={{ liquibase.context }}
 changeLogFile= {{ liquibase.change_log_file | default('/opt/buildagent/work/qrcheck/auth-handler/liquibase/changelog.yaml') }}

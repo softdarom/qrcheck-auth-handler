@@ -6,7 +6,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp.use_jdbc_metadata_defaults: false
-        default_schema: auth
+        default_schema: {{ liquibase.schema | default('auth') }}
     open-in-view: false
   data:
     jpa:
@@ -20,7 +20,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       driver-class-name: org.postgresql.Driver
-      jdbc-url: {{ liquibase.url }}
+      jdbc-url: {{ spring.datasource.hikari.jdbc_url }}
       username: {{ spring.datasource.username }}
       password: "${DATABASE_PASSWORD}"
       pool-name: {{ spring.datasource.hikari.pool_name | default('HikariPool') }}
@@ -29,7 +29,7 @@ spring:
       maximum-pool-size: {{ spring.datasource.hikari.maximum_pool_size | default(10) }}
       idle-timeout: {{ spring.datasource.hikari.pool_name | default(200000) }}
       minimum-idle: {{ spring.datasource.hikari.idle_timeout | default(2) }}
-      schema: auth
+      schema: ${spring.jpa.properties.hibernate.default_schema}
   liquibase:
     enabled: false
   groovy:
