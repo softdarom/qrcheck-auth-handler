@@ -59,7 +59,11 @@ public class AccessTokenAccessServiceImpl implements AccessTokenAccessService {
     @Override
     @Transactional
     public void deleteAll(Collection<AccessTokenDto> dtos) {
-        Assert.notEmpty(dtos, "The 'dtos' must not be empty or null!");
+        Assert.notNull(dtos, "The 'dtos' must not be null!");
+        if (dtos.isEmpty()) {
+            LOGGER.info("A collection of access tokens is empty. Do nothing. Return.");
+            return;
+        }
         var entities =
                 dtos.stream()
                         .map(modelMapper::convertToSource)
