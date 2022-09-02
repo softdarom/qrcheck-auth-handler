@@ -61,7 +61,11 @@ public class RefreshTokenAccessServiceImpl implements RefreshTokenAccessService 
     @Override
     @Transactional
     public void deleteAll(Collection<RefreshTokenDto> dtos) {
-        Assert.notEmpty(dtos, "The 'dtos' must not be empty or null!");
+        Assert.notNull(dtos, "The 'dtos' must not be null!");
+        if (dtos.isEmpty()) {
+            LOGGER.info("A collection of refresh tokens is empty. Do nothing. Return.");
+            return;
+        }
         var entities =
                 dtos.stream()
                         .map(modelMapper::convertToSource)
