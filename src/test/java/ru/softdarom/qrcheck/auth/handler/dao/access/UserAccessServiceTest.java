@@ -23,6 +23,7 @@ import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,11 +43,14 @@ class UserAccessServiceTest {
     private static final Integer DEFAULT_SIZE_REFRESH_TOKENS_BY_USER = 4;
     private static final Integer DEFAULT_SIZE_ROLES_BY_USER = 1;
     private static final Integer DEFAULT_SIZE_TOKEN_INFO_BY_USER = 4;
+    private static final Set<Long> DEFAULT_EXTERNAL_USER_IDS = Set.of(1L, 2L, 3L);
 
     @Autowired
     private UserAccessService userAccessService;
 
     //  -----------------------   successful tests   -------------------------
+
+    // findByExternalUserId()
 
     @ParameterizedTest
     @ValueSource(longs = {1L, 2L})
@@ -62,6 +66,30 @@ class UserAccessServiceTest {
             assertEquals(ActiveType.ENABLED, actual.get().getActive());
         });
     }
+
+    // findByExternalUserIds()
+
+    @Test
+    @DisplayName("findByExternalUserIds(): returns a set of UserDto")
+    void successfulFindByExternalUserIds() {
+        var actual = assertDoesNotThrow(() -> userAccessService.findByExternalUserIds(DEFAULT_EXTERNAL_USER_IDS));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertFalse(actual.isEmpty());
+        });
+    }
+
+    @Test
+    @DisplayName("findByExternalUserIds(): returns an empty set when a collection of external user ids is empty")
+    void successfulFindByExternalUserIdsEmptyExternalUserIds() {
+        var actual = assertDoesNotThrow(() -> userAccessService.findByExternalUserIds(Set.of()));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertTrue(actual.isEmpty());
+        });
+    }
+
+    // save()
 
     @ParameterizedTest
     @EnumSource(ProviderType.class)
@@ -115,11 +143,23 @@ class UserAccessServiceTest {
 
     //  -----------------------   failure tests   -------------------------
 
+    // findByExternalUserId()
+
     @Test
     @DisplayName("findByExternalUserId(): throws IllegalArgumentException when an external user id is null")
     void failureFindByExternalUserIdNullExternalUserId() {
         assertThrows(IllegalArgumentException.class, () -> userAccessService.findByExternalUserId(null));
     }
+
+    // findByExternalUserIds()
+
+    @Test
+    @DisplayName("findByExternalUserIds(): throws IllegalArgumentException when a collection of external user ids is null")
+    void failureFindByExternalUserIdsNullExternalUserIds() {
+        assertThrows(IllegalArgumentException.class, () -> userAccessService.findByExternalUserIds(null));
+    }
+
+    // save()
 
     @Test
     @DisplayName("save(): throws IllegalArgumentException when a dto is null")
@@ -139,6 +179,8 @@ class UserAccessServiceTest {
         var randomId = generateLong();
         assertThrows(IllegalArgumentException.class, () -> userAccessService.changeRole(randomId, null));
     }
+
+    // changeRole()
 
     @ParameterizedTest
     @EnumSource(RoleType.class)

@@ -16,6 +16,7 @@ import ru.softdarom.qrcheck.auth.handler.model.base.ProviderType;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
 
+import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,8 +54,8 @@ class UserRoleServiceTest {
     //  -----------------------   successful tests   -------------------------
 
     @Test
-    @DisplayName("getRoles(): returns roles")
-    void successfulGetRoles() {
+    @DisplayName("getRoles(externalUserId): returns roles")
+    void successfulGetRolesExternalUserId() {
         when(roleAccessServiceMock.findByExternalUserId(any())).thenReturn(Set.of(roleDto()));
         var actual = assertDoesNotThrow(() -> service.getRoles(generateLong()));
         assertAll(() -> {
@@ -62,6 +63,20 @@ class UserRoleServiceTest {
             assertNotNull(actual.getExternalUserId());
             assertNotNull(actual.getRoles());
             verify(roleAccessServiceMock).findByExternalUserId(any());
+        });
+    }
+
+    @Test
+    @DisplayName("getRoles(externalUserIds): returns roles")
+    void successfulGetRolesExternalUserIds() {
+        when(userAccessServiceMock.findByExternalUserIds(anyCollection())).thenReturn(Set.of(userDto(ProviderType.GOOGLE)));
+        var actual = assertDoesNotThrow(() -> service.getRoles(Set.of(generateLong())));
+        assertAll(() -> {
+            assertNotNull(actual);
+            assertFalse(actual.isEmpty());
+            assertNotNull(actual.stream().findAny().orElseThrow().getExternalUserId());
+            assertFalse(actual.stream().findAny().orElseThrow().getRoles().isEmpty());
+            verify(userAccessServiceMock).findByExternalUserIds(anyCollection());
         });
     }
 
@@ -81,22 +96,35 @@ class UserRoleServiceTest {
 
     //  -----------------------   failure tests   -------------------------
 
+    // getRoles(externalUserId)
+
     @Test
-    @DisplayName("getRoles(): throws IllegalArgumentException when a externalUserId is null")
-    void getRolesNullExternalUserId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getRoles(null));
+    @DisplayName("getRoles(externalUserId): throws IllegalArgumentException when a externalUserId is null")
+    void getRolesExternalUserIdNullExternalUserId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getRoles((Long) null));
         verify(roleAccessServiceMock, never()).findByUserId(any());
     }
 
+    // getRoles(externalUserIds)
+
     @Test
-    @DisplayName("getRoles(): throws IllegalArgumentException when a userId is null")
+    @DisplayName("getRoles(externalUserIds): throws IllegalArgumentException when a externalUserIds is null")
+    void getRolesExternalUserIdsNullExternalUserIds() {
+        assertThrows(IllegalArgumentException.class, () -> service.getRoles((Collection<Long>) null));
+        verify(userAccessServiceMock, never()).findByExternalUserIds(anyCollection());
+    }
+
+    // changeRole()
+
+    @Test
+    @DisplayName("changeRole(): throws IllegalArgumentException when a userId is null")
     void changeRoleNullExternalUserId() {
         assertThrows(IllegalArgumentException.class, () -> service.changeRole(null, RoleType.USER));
         verify(roleAccessServiceMock, never()).findByUserId(any());
     }
 
     @Test
-    @DisplayName("getRoles(): throws IllegalArgumentException when a role is null")
+    @DisplayName("changeRole(): throws IllegalArgumentException when a role is null")
     void changeRoleNullRole() {
         var userId = generateLong();
         assertThrows(IllegalArgumentException.class, () -> service.changeRole(userId, null));

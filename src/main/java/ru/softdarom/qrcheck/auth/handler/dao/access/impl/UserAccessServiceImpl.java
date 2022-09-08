@@ -13,8 +13,10 @@ import ru.softdarom.qrcheck.auth.handler.mapper.impl.UserDtoMapper;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.internal.UserDto;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "ACCESS-SERVICE")
@@ -36,6 +38,19 @@ public class UserAccessServiceImpl implements UserAccessService {
     public Optional<UserDto> findByExternalUserId(Long externalUserId) {
         Assert.notNull(externalUserId, "The 'externalUserId' must not be null!");
         return userRepository.findByExternalUserId(externalUserId).map(userMapper::convertToDestination);
+    }
+
+    @Transactional
+    @Override
+    public Set<UserDto> findByExternalUserIds(Collection<Long> externalUserIds) {
+        Assert.notNull(externalUserIds, "The 'externalUserIds' must not be null!");
+        if (externalUserIds.isEmpty()) {
+            LOGGER.warn("The 'externalUserIds' is empty. Return an empty set!");
+            return Set.of();
+        }
+        return userRepository.findByExternalUserIds(externalUserIds).stream()
+                .map(userMapper::convertToDestination)
+                .collect(Collectors.toSet());
     }
 
     @Transactional

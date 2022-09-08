@@ -13,9 +13,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ru.softdarom.qrcheck.auth.handler.exception.NotFoundException;
 import ru.softdarom.qrcheck.auth.handler.model.base.RoleType;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.ErrorResponse;
+import ru.softdarom.qrcheck.auth.handler.model.dto.response.UserRoleResponse;
 import ru.softdarom.qrcheck.auth.handler.rest.controller.UserRoleController;
 import ru.softdarom.qrcheck.auth.handler.service.UserRoleService;
 import ru.softdarom.qrcheck.auth.handler.test.tag.SpringIntegrationTest;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -27,7 +30,8 @@ import static ru.softdarom.qrcheck.auth.handler.test.generator.DtoGenerator.user
 @DisplayName("UserRoleController Spring Integration Test")
 class UserRoleControllerTest extends AbstractControllerTest {
 
-    private static final String URI_GET_USER_ROLES = "/users/1/roles";
+    private static final String URI_GET_USER_ROLES_BY_ID = "/users/1/roles";
+    private static final String URI_GET_USER_ROLES_BY_IDS = "/users/roles?userId=1&userId=2&userId=3";
     private static final String URI_CHANGE_USER_ROLE = "/users/1/roles/%s";
 
     @Mock
@@ -49,13 +53,24 @@ class UserRoleControllerTest extends AbstractControllerTest {
     //  -----------------------   successful tests   -------------------------
 
     @Test
-    @DisplayName("getRoles(): returns 200 when roles found")
-    void successfulGetRoles() {
-        when(userRoleServiceMock.getRoles(any())).thenReturn(userRoleResponse());
-        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), URI_GET_USER_ROLES));
+    @DisplayName("getRoles(userId): returns 200 when roles found")
+    void successfulGetRolesUserId() {
+        when(userRoleServiceMock.getRoles(any(Long.class))).thenReturn(userRoleResponse());
+        var actual = assertDoesNotThrow(() -> get(UserRoleResponse.class, buildApiKeyHeader(), URI_GET_USER_ROLES_BY_ID));
         assertAll(() -> {
             assertCallWithBody().accept(actual, HttpStatus.OK);
-            verify(userRoleServiceMock).getRoles(any());
+            verify(userRoleServiceMock).getRoles(any(Long.class));
+        });
+    }
+
+    @Test
+    @DisplayName("getRoles(userIds): returns 200 when roles found")
+    void successfulGetRolesUserIds() {
+        when(userRoleServiceMock.getRoles(anyCollection())).thenReturn(Set.of(userRoleResponse()));
+        var actual = assertDoesNotThrow(() -> get(Set.class, buildApiKeyHeader(), URI_GET_USER_ROLES_BY_IDS));
+        assertAll(() -> {
+            assertCallWithBody().accept(actual, HttpStatus.OK);
+            verify(userRoleServiceMock).getRoles(anyCollection());
         });
     }
 
@@ -74,26 +89,53 @@ class UserRoleControllerTest extends AbstractControllerTest {
 
     //  -----------------------   failure tests   -------------------------
 
+    // getRoles(userId)
+
     @Test
-    @DisplayName("getRoles(): returns 401 when not authentication")
-    void failureGetRolesUnauthorized() {
-        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildNotAuthHeader(), URI_GET_USER_ROLES));
+    @DisplayName("getRoles(userId): returns 401 when not authentication")
+    void failureGetRolesUserIdUnauthorized() {
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildNotAuthHeader(), URI_GET_USER_ROLES_BY_ID));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
-            verify(userRoleServiceMock, never()).getRoles(any());
+            verify(userRoleServiceMock, never()).getRoles(any(Long.class));
         });
     }
 
     @Test
-    @DisplayName("getRoles(): returns 500 when unknown error")
-    void failureGetRolesUnknown() {
-        when(userRoleServiceMock.getRoles(any())).thenThrow(RuntimeException.class);
-        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), URI_GET_USER_ROLES));
+    @DisplayName("getRoles(userId): returns 500 when unknown error")
+    void failureGetRolesUserIdUnknown() {
+        when(userRoleServiceMock.getRoles(any(Long.class))).thenThrow(RuntimeException.class);
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), URI_GET_USER_ROLES_BY_ID));
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
-            verify(userRoleServiceMock).getRoles(any());
+            verify(userRoleServiceMock).getRoles(any(Long.class));
         });
     }
+
+    // getRoles(userIds)
+
+    @Test
+    @DisplayName("getRoles(userIds): returns 401 when not authentication")
+    void failureGetRolesUserIdsUnauthorized() {
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildNotAuthHeader(), URI_GET_USER_ROLES_BY_IDS));
+        assertAll(() -> {
+            assertCall().accept(actual, HttpStatus.UNAUTHORIZED);
+            verify(userRoleServiceMock, never()).getRoles(anyCollection());
+        });
+    }
+
+    @Test
+    @DisplayName("getRoles(userIds): returns 500 when unknown error")
+    void failureGetRolesUserIdsUnknown() {
+        when(userRoleServiceMock.getRoles(anyCollection())).thenThrow(RuntimeException.class);
+        var actual = assertDoesNotThrow(() -> get(ErrorResponse.class, buildApiKeyHeader(), URI_GET_USER_ROLES_BY_IDS));
+        assertAll(() -> {
+            assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
+            verify(userRoleServiceMock).getRoles(anyCollection());
+        });
+    }
+
+    // changeRole()
 
     @Test
     @DisplayName("changeRole(): returns 401 when not authentication")
