@@ -157,7 +157,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
 
     //  -----------------------   failure tests   -------------------------
 
-    // getIncoming
+    // getIncoming()
 
     @Test
     @DisplayName("getIncoming(): returns 401 when not authentication")
@@ -197,7 +197,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
         });
     }
 
-    // getOutgoing
+    // getOutgoing()
 
     @Test
     @DisplayName("getOutgoing(): returns 401 when not authentication")
@@ -237,7 +237,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
         });
     }
 
-    // saveIncoming
+    // saveIncoming()
 
     @Test
     @DisplayName("saveIncoming(): returns 400 when incorrect request")
@@ -279,7 +279,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
         });
     }
 
-    // saveOutgoing
+    // saveOutgoing()
 
     @Test
     @DisplayName("saveOutgoing(): returns 400 when incorrect request")
@@ -321,7 +321,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
         });
     }
 
-    // deleteIncoming
+    // deleteIncoming()
 
     @Test
     @DisplayName("deleteIncoming(): returns 400 when incorrect request")
@@ -374,7 +374,7 @@ class ApiKeyControllerTest extends AbstractControllerTest {
         });
     }
 
-    // deleteOutgoing
+    // deleteOutgoing()
 
     @Test
     @DisplayName("deleteOutgoing(): returns 400 when incorrect request")

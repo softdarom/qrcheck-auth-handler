@@ -123,6 +123,8 @@ class TokenControllerTest extends AbstractControllerTest {
 
     //  -----------------------   failure tests   -------------------------
 
+    // save()
+
     @Test
     @DisplayName("save(): returns 401 when not authentication")
     void failureSaveUnauthorized() {
@@ -132,6 +134,19 @@ class TokenControllerTest extends AbstractControllerTest {
             verify(tokenServiceMock, never()).saveOAuth2TokenInfo(any());
         });
     }
+
+    @Test
+    @DisplayName("save(): returns 500 when unknown exception")
+    void failureSaveUnknownException() {
+        when(tokenServiceMock.saveOAuth2TokenInfo(any())).thenThrow(RuntimeException.class);
+        var actual = assertDoesNotThrow(() -> post(tokenUserInfoRequest(), buildApiKeyHeader(), URI_TOKENS_SAVE));
+        assertAll(() -> {
+            assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
+            verify(tokenServiceMock).saveOAuth2TokenInfo(any());
+        });
+    }
+
+    // verify()
 
     @Test
     @DisplayName("verify(): returns 401 when not authentication")
@@ -157,29 +172,6 @@ class TokenControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @DisplayName("refresh(): returns 404 when access token not found")
-    void failureRefreshNotFound() {
-        var uri = URI_TOKENS_REFRESH + "?accessToken=" + UUID.randomUUID();
-        when(tokenServiceMock.refresh(any())).thenThrow(NotFoundException.class);
-        var actual = assertDoesNotThrow(() -> post(ErrorResponse.class, buildApiKeyHeader(), uri));
-        assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.NOT_FOUND);
-            verify(tokenServiceMock).refresh(any());
-        });
-    }
-
-    @Test
-    @DisplayName("save(): returns 500 when unknown exception")
-    void failureSaveUnknownException() {
-        when(tokenServiceMock.saveOAuth2TokenInfo(any())).thenThrow(RuntimeException.class);
-        var actual = assertDoesNotThrow(() -> post(tokenUserInfoRequest(), buildApiKeyHeader(), URI_TOKENS_SAVE));
-        assertAll(() -> {
-            assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
-            verify(tokenServiceMock).saveOAuth2TokenInfo(any());
-        });
-    }
-
-    @Test
     @DisplayName("verify(): returns 500 when unknown exception")
     void failureVerifyUnknownException() {
         var uri = URI_TOKENS_VERIFY + "?accessToken=" + UUID.randomUUID();
@@ -188,6 +180,20 @@ class TokenControllerTest extends AbstractControllerTest {
         assertAll(() -> {
             assertCall().accept(actual, HttpStatus.INTERNAL_SERVER_ERROR);
             verify(tokenServiceMock).verify(any());
+        });
+    }
+
+    // refresh()
+
+    @Test
+    @DisplayName("refresh(): returns 404 when access token not found")
+    void failureRefreshNotFound() {
+        var uri = URI_TOKENS_REFRESH + "?accessToken=" + UUID.randomUUID();
+        when(tokenServiceMock.refresh(any())).thenThrow(NotFoundException.class);
+        var actual = assertDoesNotThrow(() -> post(ErrorResponse.class, buildApiKeyHeader(), uri));
+        assertAll(() -> {
+            assertCall().accept(actual, HttpStatus.NOT_FOUND);
+            verify(tokenServiceMock).refresh(any());
         });
     }
 

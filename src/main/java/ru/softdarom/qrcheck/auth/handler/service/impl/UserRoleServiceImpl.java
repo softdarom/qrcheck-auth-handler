@@ -11,6 +11,8 @@ import ru.softdarom.qrcheck.auth.handler.model.dto.internal.RoleDto;
 import ru.softdarom.qrcheck.auth.handler.model.dto.response.UserRoleResponse;
 import ru.softdarom.qrcheck.auth.handler.service.UserRoleService;
 
+import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,18 @@ public class UserRoleServiceImpl implements UserRoleService {
                         .map(RoleDto::getName)
                         .collect(Collectors.toSet());
         return new UserRoleResponse(externalUserId, roles);
+    }
+
+    @Override
+    public Set<UserRoleResponse> getRoles(Collection<Long> externalUserIds) {
+        Assert.notNull(externalUserIds, "The 'externalUserIds' must not be null!");
+        return userAccessService.findByExternalUserIds(externalUserIds).stream()
+                .map(it ->
+                        new UserRoleResponse(
+                                it.getExternalUserId(),
+                                it.getRoles().stream().map(RoleDto::getName).collect(Collectors.toSet())
+                        )
+                ).collect(Collectors.toSet());
     }
 
     @Override
