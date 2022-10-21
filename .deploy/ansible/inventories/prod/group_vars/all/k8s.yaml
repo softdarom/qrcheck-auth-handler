@@ -1,0 +1,8 @@
+namespace: prod
+
+deployment:
+  health:
+    progress_deadline_seconds: 750
+    initial_delay_seconds: 5
+    period_seconds: 5
+    failure_threshold: 30
