@@ -8,4 +8,6 @@
 
     - name: Load or Update configurations to Minikube
       role: uploader_minikube
-      when: minikube == 'yes'
+      when:
+        - minikube is defined
+        - minikube == 'yes'
