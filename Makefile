@@ -13,7 +13,7 @@ start:
 	@eval $$(minikube docker-env) && docker build -t ${PROJECT_NAME}/${APPLICATION_NAME}:${DOCKER_VERSION} .
 
 	@echo "Generating configs and Starting Service"
-	@ansible-playbook -i .deploy/ansible/inventories/local --vault-password-file=.deploy/ansible/ansible_vault_local.txt -e env=local -e minikube=yes .deploy/ansible/main.yaml
+	@ansible-playbook -i .deploy/ansible/inventories/local --vault-password-file=.deploy/ansible/ansible_vault_local.txt -e env=local -e minikube=yes -e minikube=yes .deploy/ansible/main.yaml
 stop:
 	@echo "Removing and Stopping Service"
 	@kubectl delete all -l app=${APPLICATION_NAME}
